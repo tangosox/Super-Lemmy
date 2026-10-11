@@ -561,3 +561,36 @@ article.comment-node
     max-width: none !important;
     width: 100% !important;
     }
+/* SUPER LEMMY — COMMUNITY PAGE LAYOUT */
+
+.community.container-lg {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.community > .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Main post listings */
+.community > .row > .col-md-8,
+.community > .row > .col-lg-9 {
+    flex: 1 1 auto !important;
+    width: calc(100% - 330px) !important;
+    max-width: calc(100% - 330px) !important;
+    padding-left: 0 !important;
+}
+
+/* Sidebar */
+.community > .row > .col-md-4,
+.community > .row > .col-lg-3 {
+    flex: 0 0 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    padding-left: 16px !important;
+}
