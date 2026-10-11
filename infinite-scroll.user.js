@@ -1,0 +1,550 @@
+// ==UserScript==
+// @name         Lemmy Infinite Scroll v0.2
+// @namespace    paul-lemmy
+// @version      0.2
+// @description  Append-only infinite scrolling for Lemmy
+// @include      /^https:\/\/lemmy\.[^/]+\/.*/
+// @run-at       document-idle
+// @grant        none
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    let loading = false;
+    let finished = false;
+    let sentinel = null;
+
+    /*
+     * Cursor representing the NEXT page we need to load.
+     *
+     * On page 1 there is no pageCursor in the URL, so we obtain
+     * the next cursor from Lemmy's API first.
+     */
+    let nextCursor = null;
+
+    function getPostContainer() {
+        return document.querySelector('.post-listings');
+    }
+
+    function getCurrentOptions() {
+        const params = new URLSearchParams(location.search);
+
+        return {
+            sort: params.get('sort') || 'Active',
+            listingType: params.get('listingType') || 'All',
+            pageCursor: params.get('pageCursor')
+        };
+    }
+
+    /*
+     * Ask Lemmy's API for a page solely so we can obtain its
+     * next_page cursor.
+     *
+     * We use the browser's existing Lemmy authentication.
+     */
+    async function getNextCursor(cursor = null) {
+        const options = getCurrentOptions();
+
+        const params = new URLSearchParams({
+            limit: '20',
+            sort: options.sort,
+            saved_only: 'false',
+            type_: options.listingType,
+            show_hidden: 'false'
+        });
+
+        if (cursor) {
+            params.set('page_cursor', cursor);
+        }
+
+        const response = await fetch(
+            `/api/v3/post/list?${params}`,
+            {
+                credentials: 'include'
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `API returned HTTP ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+
+        return data.next_page || null;
+    }
+
+    /*
+     * Download an ordinary Lemmy HTML page without navigating
+     * the browser to it.
+     */
+    async function fetchPage(cursor) {
+        const options = getCurrentOptions();
+
+        const params = new URLSearchParams({
+            dataType: 'Post',
+            listingType: options.listingType,
+            pageCursor: cursor,
+            sort: options.sort
+        });
+
+        const response = await fetch(
+            `/?${params}`,
+            {
+                credentials: 'include'
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Page returned HTTP ${response.status}`
+            );
+        }
+
+        const html = await response.text();
+
+        return new DOMParser().parseFromString(
+            html,
+            'text/html'
+        );
+    }
+
+    function appendPosts(doc) {
+        const currentContainer = getPostContainer();
+        const newContainer =
+              doc.querySelector('.post-listings');
+
+        if (!currentContainer || !newContainer) {
+            throw new Error(
+                'Could not find .post-listings'
+            );
+        }
+
+        /*
+         * Import exactly what Lemmy rendered inside the new
+         * post-listings container: posts, separators, etc.
+         */
+        const fragment =
+              document.createDocumentFragment();
+
+        [...newContainer.children].forEach(child => {
+            fragment.appendChild(
+                document.importNode(child, true)
+            );
+        });
+
+        enableImportedImageExpansion(fragment);
+
+        // Open linked thumbnails in new tabs on appended pages.
+        fragment.querySelectorAll('a.thumbnail[href]').forEach(link => {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        });
+
+        currentContainer.appendChild(fragment);
+    }
+
+    async function loadMore() {
+        if (loading || finished) {
+            return;
+        }
+
+        loading = true;
+
+        try {
+            /*
+             * First invocation:
+             *
+             * Current DOM already contains page 1. Ask the API
+             * what cursor represents page 2.
+             */
+            if (!nextCursor) {
+                nextCursor = await getNextCursor(
+                    getCurrentOptions().pageCursor
+                );
+            }
+
+            if (!nextCursor) {
+                finished = true;
+                return;
+            }
+
+            console.log(
+                '[Infinite Scroll] Loading',
+                nextCursor
+            );
+
+            /*
+             * Fetch page 2/3/etc as HTML, but DO NOT navigate.
+             */
+            const doc = await fetchPage(nextCursor);
+
+            /*
+             * Append it to what is already on screen.
+             */
+            appendPosts(doc);
+
+            /*
+             * Ask the API what comes after the page we just
+             * appended.
+             */
+            const loadedCursor = nextCursor;
+
+            nextCursor =
+                await getNextCursor(loadedCursor);
+
+            console.log(
+                '[Infinite Scroll] Loaded.',
+                'Next cursor:',
+                nextCursor
+            );
+
+            if (!nextCursor) {
+                finished = true;
+            }
+
+        } catch (error) {
+            console.error(
+                '[Infinite Scroll]',
+                error
+            );
+        } finally {
+            loading = false;
+        }
+    }
+
+    function enableImageResize(wrapper) {
+        const link = wrapper.querySelector('a');
+        const img = link?.querySelector('img.img-expanded');
+
+        if (link) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        }
+
+        if (!link || !img || img.dataset.superLemmyResizable) return;
+        img.dataset.superLemmyResizable = 'true';
+
+        img.style.maxWidth = 'none';
+        img.style.setProperty('max-height', 'none', 'important');
+        img.style.height = 'auto';
+        img.style.userSelect = 'none';
+        img.draggable = false;
+
+        function setInitialSize() {
+            if (img.dataset.superLemmyManuallyResized === 'true') return;
+
+            const naturalWidth = img.naturalWidth;
+            const naturalHeight = img.naturalHeight;
+            if (!naturalWidth || !naturalHeight) return;
+
+            const postColumn = img.closest('.post-listings');
+            const rightEdge = postColumn
+            ? postColumn.getBoundingClientRect().right
+            : document.documentElement.clientWidth;
+
+            const availableWidth = Math.max(
+                100,
+                rightEdge - img.getBoundingClientRect().left - 20
+            );
+
+            const maxInitialHeight = window.innerHeight * 0.65;
+            const scale = Math.min(
+                1,
+                availableWidth / naturalWidth,
+                maxInitialHeight / naturalHeight
+            );
+
+            img.style.width = `${naturalWidth * scale}px`;
+        }
+
+        if (img.complete && img.naturalWidth) {
+            setInitialSize();
+        } else {
+            img.addEventListener('load', setInitialSize, { once: true });
+        }
+
+        let startX = 0;
+        let startWidth = 0;
+        let pointerDown = false;
+        let resized = false;
+        let suppressClick = false;
+
+        const threshold = 5;
+
+        img.addEventListener('pointerdown', event => {
+            if (event.button !== 0) return;
+
+            pointerDown = true;
+            resized = false;
+            startX = event.clientX;
+            startWidth = img.getBoundingClientRect().width;
+
+            img.setPointerCapture(event.pointerId);
+            event.preventDefault();
+        });
+
+        img.addEventListener('pointermove', event => {
+            if (!pointerDown) return;
+
+            const delta = event.clientX - startX;
+
+            if (!resized && Math.abs(delta) < threshold) return;
+
+            resized = true;
+            suppressClick = true;
+            img.dataset.superLemmyManuallyResized = 'true';
+
+            img.style.width =
+                `${Math.max(100, startWidth + delta)}px`;
+        });
+
+        function finish(event) {
+            if (!pointerDown) return;
+
+            pointerDown = false;
+
+            if (img.hasPointerCapture(event.pointerId)) {
+                img.releasePointerCapture(event.pointerId);
+            }
+        }
+
+        img.addEventListener('pointerup', finish);
+        img.addEventListener('pointercancel', finish);
+
+        link.addEventListener('click', event => {
+            if (!suppressClick) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClick = false;
+        }, true);
+    }
+
+    function enableImportedImageExpansion(container) {
+        const buttons = container.querySelectorAll(
+            'button.thumbnail[aria-label="Expand here"]'
+        );
+
+        buttons.forEach(button => {
+            button.addEventListener('click', event => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const post = button.closest('.post-listing');
+                const picture = button.querySelector('picture');
+                const img = picture?.querySelector('img');
+
+                if (!post || !picture || !img) return;
+
+                const existing = post.querySelector(
+                    '.super-lemmy-expanded-image'
+                );
+
+                if (existing) {
+                    existing.remove();
+                    button.setAttribute('aria-label', 'Expand here');
+                    button.setAttribute('data-tippy-content', 'Expand here');
+                    return;
+                }
+
+                const expandedPicture = picture.cloneNode(true);
+                const expandedImg = expandedPicture.querySelector('img');
+
+                // Post's original media link, not its locally cached thumbnail.
+                const originalLink = [...post.querySelectorAll('a[href]')]
+                .find(a => {
+                    if (a.closest('button.thumbnail, .super-lemmy-expanded-image')) return false;
+                    try {
+                        const url = new URL(a.href, location.href);
+                        return /^https?:$/.test(url.protocol) &&
+                            /\.(?:png|jpe?g|gif|webp|avif)$/i.test(url.pathname);
+                    } catch {
+                        return false;
+                    }
+                });
+                const originalUrl = originalLink?.href || img.src;
+
+                // A cloned <picture> retains the thumbnail's source candidates.
+                // Remove them so the browser actually loads the original URL.
+                expandedPicture.querySelectorAll('source').forEach(source => source.remove());
+                expandedImg.removeAttribute('srcset');
+                expandedImg.src = originalUrl;
+
+                expandedImg.classList.remove(
+                    'thumbnail',
+                    'rounded',
+                    'object-fit-cover'
+                );
+
+                expandedImg.classList.add(
+                    'img-expanded',
+                    'slight-radius'
+                );
+
+                const wrapper = document.createElement('div');
+                wrapper.className =
+                    'offset-sm-3 my-2 d-none d-sm-block super-lemmy-expanded-image';
+
+                const link = document.createElement('a');
+                link.className = 'd-inline-block';
+                link.href = originalUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+
+                link.appendChild(expandedPicture);
+                wrapper.appendChild(link);
+
+                post.appendChild(wrapper);
+                enableImageResize(wrapper);
+
+                button.setAttribute('aria-label', 'Collapse here');
+                button.setAttribute('data-tippy-content', 'Collapse here');
+            });
+        });
+    }
+
+    function setup() {
+        const paginator =
+              document.querySelector('.paginator');
+
+        if (!paginator || !getPostContainer()) {
+            return;
+        }
+
+        sentinel = document.createElement('div');
+        sentinel.id =
+            'lemmy-infinite-scroll-sentinel';
+
+        /*
+         * A little height makes intersection detection more
+         * reliable while still requiring you to reach the end.
+         */
+        sentinel.style.height = '2px';
+
+        /*
+         * Put trigger BELOW the normal paginator.
+         */
+        paginator.after(sentinel);
+
+        const observer =
+              new IntersectionObserver(
+                  entries => {
+                      if (
+                          entries.some(
+                              entry => entry.isIntersecting
+                          )
+                      ) {
+                          loadMore();
+                      }
+                  },
+                  {
+                      rootMargin: '0px',
+                      threshold: 1
+                  }
+              );
+
+        observer.observe(sentinel);
+    }
+
+    /*
+    * Enable resizing for native Lemmy expansions,
+    * including images on the original first page.
+    */
+    function observeExpandedImages() {
+        const initialize = () => {
+            document.querySelectorAll('img.img-expanded').forEach(img => {
+                const wrapper = img.closest(
+                    '.super-lemmy-expanded-image, .offset-sm-3'
+                );
+
+                if (wrapper) {
+                    enableImageResize(wrapper);
+                }
+            });
+        };
+
+        initialize();
+
+        const observer = new MutationObserver(initialize);
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    observeExpandedImages();
+    setup();
+
+    /*
+    * Open post links in new tabs.
+    * Preserve the infinite-scroll feed in the original tab.
+    */
+    document.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0) return;
+
+        if (event.ctrlKey || event.metaKey ||
+            event.shiftKey || event.altKey) return;
+
+        const link = event.target.closest('a[href]');
+        if (!link) return;
+
+        // Only affect links inside post listings.
+        if (!link.closest('.post-listings')) return;
+
+        const url = new URL(link.href, location.href);
+
+        // Only open Lemmy post pages, not communities or profiles.
+        if (url.origin !== location.origin) return;
+        if (!/^\/post\/\d+/.test(url.pathname)) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        window.open(url.href, '_blank', 'noopener');
+    }, true);
+
+    /*
+ * Open direct image links in new tabs.
+ * Handles both original and infinite-scroll posts.
+ */
+    document.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0) return;
+
+        if (event.ctrlKey || event.metaKey ||
+            event.shiftKey || event.altKey) return;
+
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest('a[href]');
+        if (!link || !link.closest('.post-listings')) return;
+
+        const url = new URL(link.href, location.href);
+
+        const isImage = /\.(jpg|jpeg|png|gif|webp|avif)(?:$|[?#])/i
+        .test(url.href);
+
+        if (!isImage) return;
+
+        // Set the link itself to open in a new tab.
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        // Let the browser handle the click normally.
+    }, true);
+    // Open all linked post thumbnails in new tabs.
+    function openThumbnailLinksInNewTabs(container) {
+        container.querySelectorAll('a.thumbnail[href]').forEach(link => {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        });
+    }
+
+    // Handle thumbnails on the original page.
+    openThumbnailLinksInNewTabs(document);
+})();
+

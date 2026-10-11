@@ -1,0 +1,239 @@
+/* ============================================================
+   Lemmy — Reddit-style comments
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Comment tree / indentation
+   ------------------------------------------------------------ */
+
+/* Reset Lemmy's comment-list spacing */
+ul.comments {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Reset individual list items */
+ul.comments > li.comment {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/*
+ * Nested replies:
+ * 24px indentation per level.
+ *
+ * Lemmy supplies colored border-left rules inline, so explicitly
+ * neutralize all border-left properties.
+ */
+li.comment > ul.comments {
+    margin: 0 !important;
+    padding: 0 0 0 24px !important;
+
+    border-left-width: 0 !important;
+    border-left-style: none !important;
+    border-left-color: transparent !important;
+}
+
+
+/* ------------------------------------------------------------
+   Comment layout / vertical density
+   ------------------------------------------------------------ */
+
+article.comment-node {
+    margin: 0 !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+/* Header row */
+article.comment-node > .ms-2 > .d-flex:first-child {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* ------------------------------------------------------------
+   Comment text
+   ------------------------------------------------------------ */
+
+.comment-content {
+    margin: 2px 0 !important;
+    padding: 0 !important;
+
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.comment-content .md-div {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.comment-content p {
+    margin: 2px 0 !important;
+}
+
+
+/* ------------------------------------------------------------
+   Action row
+   ------------------------------------------------------------ */
+
+.comment-bottom-btns {
+    margin: 1px 0 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    line-height: 1 !important;
+}
+
+.comment-bottom-btns .btn {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    line-height: 1 !important;
+}
+
+
+/* ------------------------------------------------------------
+   Nesting lines — remove completely
+   ------------------------------------------------------------ */
+
+/*
+ * Lemmy sets border-left inline with !important.
+ * Override the entire border property.
+ */
+ul.comments,
+li.comment > ul.comments {
+    border: 0 !important;
+    border-left: 0 !important;
+}
+
+
+/* ============================================================
+   Dynamic thread depth colors
+   ============================================================ */
+
+/* Comment background */
+article.comment-node[style*="--thread-hue"] {
+    background:
+        hsl(var(--thread-hue) 20% 12%) !important;
+}
+
+/* Corresponding nesting line */
+ul.comments[style*="--thread-hue"] {
+    border-left:
+        2px solid hsl(var(--thread-hue) 38% 38%) !important;
+}
+
+/* ============================================================
+   Reddit-style collapse targets
+   ============================================================ */
+
+article.comment-node {
+    position: relative !important;
+}
+
+/*
+ * Invisible clickable strip running down the left side
+ * of each comment.
+ */
+.reddit-collapse-strip {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    left: -10px;
+    width: 14px;
+
+    cursor: pointer;
+    z-index: 5;
+}
+
+/* Subtle indication on hover */
+.reddit-collapse-strip:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+    
+/* =========================================
+   SUPER LEMMY — EXPANDED POST IMAGES
+   ========================================= */
+
+/* Align the expanded post image with the post content */
+.post-listing .offset-sm-3:has(img.img-expanded) {
+    margin-left: 150px !important;
+}
+
+/* Allow manually enlarged images to extend beyond the column */
+.post-listing:has(img.img-expanded) {
+    position: relative;
+    z-index: 10;
+}
+
+.post-listing .offset-sm-3:has(img.img-expanded) {
+    position: relative;
+    z-index: 11;
+    overflow: visible !important;
+}
+    
+/* SUPER LEMMY — FULL-WIDTH POST PAGE */
+
+.post.container-lg {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* Main post/comment column */
+.post.container-lg > .row > .col-lg-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+/* Sidebar */
+.post.container-lg > .row > .col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+/* SUPER LEMMY — IMAGE OVERFLOW */
+
+.post.container-lg .post-listing,
+.post.container-lg .post-listing .md-div,
+.post.container-lg article.comment-node,
+.post.container-lg article.comment-node .md-div {
+    overflow: visible !important;
+}
+
+/* Keep enlarged images above adjacent content */
+.post.container-lg .post-listing:has(img),
+.post.container-lg article.comment-node:has(img) {
+    position: relative;
+    z-index: 2;
+}
+
+.post.container-lg .post-listing img,
+.post.container-lg article.comment-node .md-div img {
+    max-width: none !important;
+}
+/* Super Lemmy — allow resized images to overflow their paragraphs */
+
+.post.container-lg .md-div p:has(img) {
+    overflow: visible !important;
+}
+
+/* Super Lemmy — initial video sizing */
+
+.post.container-lg .post-listing video,
+.post.container-lg article.comment-node video {
+    max-height: 45vh !important;
+    max-width: 100% !important;
+    width: auto;
+    height: auto;
+}
+
+/* Super Lemmy — post voting arrow spacing */
+.post.container-lg .vote-bar button {
+    line-height: 2 !important;
+}
