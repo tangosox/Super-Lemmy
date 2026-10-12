@@ -52,7 +52,7 @@ This is a personal, experimental project, and contributions, code reviews, and b
 
 ### Front Page
 
-![Super Lemmy front page](Frontpage.png)
+![Super Lemmy front page](frontpage.png)
 
 ### Comment Threads
 
