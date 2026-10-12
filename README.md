@@ -8,6 +8,14 @@ The goal is a compact, information-dense interface with improved comment navigat
 
 The project is currently in early development. Feedback, bug reports, and suggestions are welcome.
 
+## AI Assistance
+
+Super Lemmy was developed with assistance from OpenAI's ChatGPT, including JavaScript and CSS generation, debugging, and documentation.
+
+The project's design, feature ideas, customization decisions, and testing have been directed by me. AI-generated code has been reviewed and iteratively refined through hands-on testing.
+
+This is a personal, experimental project, and contributions, code reviews, and bug reports are welcome.
+
 ## Features
 
 ### Classic Reddit-style layout
