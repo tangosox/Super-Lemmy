@@ -140,7 +140,6 @@ Potential future improvements include:
 - [ ] Improve infinite-scroll navigation and history restoration
 - [ ] Improve compatibility across Lemmy instances
 - [ ] Refine responsive layouts
-- [ ] Add screenshots and installation examples
 - [ ] Reduce duplicated code and improve performance
 
 ## Feedback and contributions
