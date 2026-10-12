@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Lemmy Infinite Scroll v0.2
+// @name         Lemmy Infinite Scroll
 // @namespace    paul-lemmy
-// @version      0.2
+// @version      0.3
 // @description  Append-only infinite scrolling for Lemmy
 // @include      /^https:\/\/lemmy\.[^/]+\/.*/
 // @run-at       document-idle
@@ -14,6 +14,10 @@
     let loading = false;
     let finished = false;
     let sentinel = null;
+    let scrollObserver = null;
+    let activePostContainer = null;
+    let activePageKey = null;
+    let pageGeneration = 0;
 
     /*
      * Cursor representing the NEXT page we need to load.
@@ -152,6 +156,7 @@
         }
 
         loading = true;
+        const generation = pageGeneration;
 
         try {
             /*
@@ -165,6 +170,8 @@
                     getCurrentOptions().pageCursor
                 );
             }
+
+            if (generation !== pageGeneration) return;
 
             if (!nextCursor) {
                 finished = true;
@@ -180,6 +187,7 @@
              * Fetch page 2/3/etc as HTML, but DO NOT navigate.
              */
             const doc = await fetchPage(nextCursor);
+            if (generation !== pageGeneration) return;
 
             /*
              * Append it to what is already on screen.
@@ -192,8 +200,9 @@
              */
             const loadedCursor = nextCursor;
 
-            nextCursor =
-                await getNextCursor(loadedCursor);
+            const followingCursor = await getNextCursor(loadedCursor);
+            if (generation !== pageGeneration) return;
+            nextCursor = followingCursor;
 
             console.log(
                 '[Infinite Scroll] Loaded.',
@@ -211,7 +220,7 @@
                 error
             );
         } finally {
-            loading = false;
+            if (generation === pageGeneration) loading = false;
         }
     }
 
@@ -407,46 +416,53 @@
     }
 
     function setup() {
-        const paginator =
-              document.querySelector('.paginator');
+        const postContainer = getPostContainer();
+        const paginator = document.querySelector('.paginator');
+        const pageKey = location.pathname + location.search;
 
-        if (!paginator || !getPostContainer()) {
+        // No listing on post/comment pages. Discard the old observer
+        // and reset state so the next listing begins at page one.
+        if (!postContainer || !paginator) {
+            if (activePostContainer || scrollObserver || sentinel) {
+                scrollObserver?.disconnect();
+                sentinel?.remove();
+                scrollObserver = null;
+                sentinel = null;
+                activePostContainer = null;
+                activePageKey = null;
+                pageGeneration++;
+                loading = false;
+                finished = false;
+                nextCursor = null;
+            }
             return;
         }
 
+        // DOM changes from appended posts must NOT create another sentinel.
+        if (postContainer === activePostContainer &&
+            pageKey === activePageKey &&
+            sentinel?.isConnected &&
+            scrollObserver) return;
+
+        scrollObserver?.disconnect();
+        sentinel?.remove();
+        pageGeneration++;
+        loading = false;
+        finished = false;
+        nextCursor = null;
+        activePostContainer = postContainer;
+        activePageKey = pageKey;
+
         sentinel = document.createElement('div');
-        sentinel.id =
-            'lemmy-infinite-scroll-sentinel';
-
-        /*
-         * A little height makes intersection detection more
-         * reliable while still requiring you to reach the end.
-         */
+        sentinel.id = 'lemmy-infinite-scroll-sentinel';
         sentinel.style.height = '2px';
-
-        /*
-         * Put trigger BELOW the normal paginator.
-         */
         paginator.after(sentinel);
 
-        const observer =
-              new IntersectionObserver(
-                  entries => {
-                      if (
-                          entries.some(
-                              entry => entry.isIntersecting
-                          )
-                      ) {
-                          loadMore();
-                      }
-                  },
-                  {
-                      rootMargin: '0px',
-                      threshold: 1
-                  }
-              );
+        scrollObserver = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) loadMore();
+        }, { rootMargin: '0px', threshold: 1 });
 
-        observer.observe(sentinel);
+        scrollObserver.observe(sentinel);
     }
 
     /*
@@ -468,7 +484,16 @@
 
         initialize();
 
-        const observer = new MutationObserver(initialize);
+        let setupScheduled = false;
+        const observer = new MutationObserver(() => {
+            initialize();
+            if (setupScheduled) return;
+            setupScheduled = true;
+            requestAnimationFrame(() => {
+                setupScheduled = false;
+                setup();
+            });
+        });
 
         observer.observe(document.body, {
             childList: true,
@@ -547,4 +572,3 @@
     // Handle thumbnails on the original page.
     openThumbnailLinksInNewTabs(document);
 })();
-
