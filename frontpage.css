@@ -594,3 +594,26 @@ article.comment-node
     max-width: 320px !important;
     padding-left: 16px !important;
 }
+
+/* ============================================================
+   SUPER LEMMY — COMPACT COMMUNITY HEADER
+   ============================================================ */
+
+/* Restrict community banner height */
+.community .community-banner,
+.community .banner,
+.community img.banner {
+    max-height: 70px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+}
+
+/* Super Lemmy — compact community icon */
+.community img.avatar-overlay {
+    width: 78px !important;
+    height: 78px !important;
+    min-width: 78px !important;
+    min-height: 78px !important;
+    object-fit: cover !important;
+}
+
