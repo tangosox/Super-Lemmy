@@ -42,7 +42,13 @@ The project is currently in early development. Feedback, bug reports, and sugges
 
 ## Screenshots
 
-*Screenshots coming soon.*
+### Front Page
+
+![Super Lemmy front page](Frontpage.png)
+
+### Comment Threads
+
+![Super Lemmy color-coded comment threads](comments.png)
 
 ## Installation
 
