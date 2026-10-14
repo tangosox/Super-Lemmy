@@ -207,10 +207,16 @@ article.comment-node {
 }
 
 /* Keep enlarged images above adjacent content */
-.post.container-lg .post-listing:has(img),
-.post.container-lg article.comment-node:has(img) {
+.post.container-lg .post-listing:has(img){
     position: relative;
     z-index: 2;
+}
+
+/* Raise enlarged comment images above the sidebar */
+.post.container-lg article.comment-node .md-div p:has(img) {
+    position: relative;
+    z-index: 10;
+    overflow: visible !important;
 }
 
 .post.container-lg .post-listing img,
