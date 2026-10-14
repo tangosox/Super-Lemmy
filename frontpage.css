@@ -1,22 +1,22 @@
 /* ============================================================
-LEMMY.WORLD — OLD-LEMMY-INSPIRED LAYOUT
-============================================================ */
+   LEMMY.WORLD — OLD-LEMMY-INSPIRED LAYOUT
+   ============================================================ */
 
 
 /* ============================================================
-GLOBAL PAGE / NAVBAR
-============================================================ */
+   GLOBAL PAGE / NAVBAR
+   ============================================================ */
 
 /* Compact gap below navbar */
 main.mt-4 {
     margin-top: 2px !important;
-    }
+}
 
 /* Remove unnecessary main-container top padding */
 main.container-fluid,
 main.container-lg {
     padding-top: 0 !important;
-    }
+}
 
 /* Full-width navbar aligned to page edge */
 nav.navbar > .container,
@@ -32,33 +32,33 @@ nav.navbar > .container-fluid,
 
     padding-left: 8px !important;
     padding-right: 8px !important;
-    }
+}
 
 .shadow-sm:has(#navbar) {
     background: #303638 !important;
     border-bottom: 2px solid #087f5b !important;
     box-shadow: none !important;
-    }
+}
 
 #navbar {
     min-height: 50px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    }
+}
 
 #navbar .navbar-brand {
     font-weight: 700 !important;
-    }
+}
 
 #navbar .nav-link {
     padding-top: 6px !important;
     padding-bottom: 6px !important;
-    }
+}
 
 
 /* ============================================================
-HOME PAGE LAYOUT
-============================================================ */
+   HOME PAGE LAYOUT
+   ============================================================ */
 
 .home.container-lg {
     max-width: 1500px !important;
@@ -69,13 +69,13 @@ HOME PAGE LAYOUT
     padding-left: 8px !important;
     padding-right: 8px !important;
     padding-top: 4px !important;
-    }
+}
 
 /* Remove Bootstrap row gutter around the main layout */
 .home > .row {
     margin-left: 0 !important;
     margin-right: 0 !important;
-    }
+}
 
 /* Feed takes remaining width */
 .home > .row > .col-md-8,
@@ -86,7 +86,7 @@ HOME PAGE LAYOUT
     max-width: calc(100% - 330px) !important;
 
     padding-left: 0 !important;
-    }
+}
 
 /* Fixed-width sidebar */
 .home > .row > .col-md-4,
@@ -96,17 +96,17 @@ HOME PAGE LAYOUT
     width: 320px !important;
 
     padding-left: 16px !important;
-    }
+}
 
 .home > .row > .col-md-4 .card,
 .home > .row > .col-lg-3 .card {
     border-radius: 2px !important;
-    }
+}
 
 
 /* ============================================================
-COMMUNITY SPOTLIGHT
-============================================================ */
+   COMMUNITY SPOTLIGHT
+   ============================================================ */
 
 .home #tagline {
     margin: 0 0 6px 0 !important;
@@ -119,28 +119,28 @@ COMMUNITY SPOTLIGHT
 
     font-size: 0.78rem !important;
     line-height: 1.05 !important;
-    }
+}
 
 .home #tagline p,
 .home #tagline > * {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    }
+}
 
 .home #tagline p {
     padding: 1px 0 !important;
     font-size: 12px !important;
     line-height: 1.05 !important;
-    }
+}
 
 .home #tagline + * {
     margin-top: 0 !important;
-    }
+}
 
 
 /* ============================================================
-HOME FILTER / SORT CONTROLS
-============================================================ */
+   HOME FILTER / SORT CONTROLS
+   ============================================================ */
 
 .home .main-content-wrapper > div > .row.align-items-center {
     margin-top: 0 !important;
@@ -148,12 +148,12 @@ HOME FILTER / SORT CONTROLS
 
     row-gap: 4px !important;
     --bs-gutter-y: 0 !important;
-    }
+}
 
 .home .main-content-wrapper > div >
 .row.align-items-center > [class*="col-"] {
     margin-top: 0 !important;
-    }
+}
 
 /* Old-style square tabs */
 .home .btn-group .btn {
@@ -168,13 +168,13 @@ HOME FILTER / SORT CONTROLS
     font-size: 14px !important;
     font-weight: 600 !important;
     line-height: 1.25 !important;
-    }
+}
 
 .home .btn-group .btn.active,
 .home .btn-group .btn:checked,
 .home .btn-group .btn-check:checked + .btn {
     background: #343a3c !important;
-    }
+}
 
 /* Sort selector */
 .home .form-select {
@@ -186,12 +186,12 @@ HOME FILTER / SORT CONTROLS
     min-height: 0 !important;
 
     font-size: 14px !important;
-    }
+}
 
 
 /* ============================================================
-POST LIST
-============================================================ */
+   POST LIST
+   ============================================================ */
 
 .post-listings {
     width: 100% !important;
@@ -200,7 +200,7 @@ POST LIST
     margin-left: -8px !important;
 
     background: #151819 !important;
-    }
+}
 
 .post-listing {
     margin: 0 !important;
@@ -209,22 +209,22 @@ POST LIST
     padding-bottom: 8px !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
-    }
+}
 
 .post-listing:hover {
     background: #1b1f20 !important;
-    }
+}
 
 /* Very subtle separators */
 .post-listings > hr {
     margin: 0 !important;
     opacity: 0.07 !important;
-    }
+}
 
 
 /* ============================================================
-POST ROW
-============================================================ */
+   POST ROW
+   ============================================================ */
 
 .post-container {
     margin: 0 !important;
@@ -232,23 +232,23 @@ POST ROW
     align-items: flex-start !important;
 
     min-height: 0 !important;
-    }
+}
 
 /* Main post content column */
 .post-container > .col.flex-grow-1 {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    }
+}
 
 .post-container > .col.flex-grow-1 > .row {
     margin: 0 !important;
     flex-wrap: nowrap !important;
-    }
+}
 
 
 /* ============================================================
-VOTE COLUMN
-============================================================ */
+   VOTE COLUMN
+   ============================================================ */
 
 .post-container > .col.flex-grow-0:first-child {
     width: 36px !important;
@@ -258,26 +258,26 @@ VOTE COLUMN
     padding-left: 0 !important;
     padding-right: 2px !important;
     padding-bottom: 0 !important;
-    }
+}
 
 .vote-bar {
     width: 34px !important;
     line-height: 1.05 !important;
-    }
+}
 
 .vote-bar .post-score {
     margin: 0 !important;
     line-height: 1.1 !important;
-    }
+}
 
 .vote-bar button {
     line-height: 2 !important;
-    }
+}
 
 
 /* ============================================================
-POST THUMBNAIL
-============================================================ */
+   POST THUMBNAIL
+   ============================================================ */
 
 .post-container .row > .col.flex-grow-0.px-0 {
     flex: 0 0 102px !important;
@@ -285,7 +285,7 @@ POST THUMBNAIL
 
     margin-left: 0 !important;
     margin-right: 9px !important;
-    }
+}
 
 .post-container button.thumbnail,
 .post-container button.thumbnail img.thumbnail {
@@ -293,33 +293,33 @@ POST THUMBNAIL
     height: 78px !important;
 
     border-radius: 2px !important;
-    }
+}
 
 .post-container button.thumbnail img.thumbnail {
     object-fit: cover !important;
-    }
+}
 
 
 /* ============================================================
-POST TEXT COLUMN
-============================================================ */
+   POST TEXT COLUMN
+   ============================================================ */
 
 .post-container .row > .col.flex-grow-1 {
     min-width: 0 !important;
     padding: 0 !important;
-    }
+}
 
 
 /* ============================================================
-POST TITLE
-============================================================ */
+   POST TITLE
+   ============================================================ */
 
 .post-title {
     margin: 0 !important;
     padding: 0 !important;
 
     line-height: 1.2 !important;
-    }
+}
 
 .post-title h1 {
     margin: 0 !important;
@@ -328,11 +328,11 @@ POST TITLE
     font-size: 17px !important;
     font-weight: 500 !important;
     line-height: 1.25 !important;
-    }
+}
 
 .post-title h1 a {
     line-height: inherit !important;
-    }
+}
 
 /* Expando beside title */
 .post-title > button {
@@ -340,12 +340,12 @@ POST TITLE
     padding: 0 3px !important;
 
     vertical-align: baseline !important;
-    }
+}
 
 
 /* ============================================================
-EXTERNAL LINK DOMAIN
-============================================================ */
+   EXTERNAL LINK DOMAIN
+   ============================================================ */
 
 .post-container .post-title + p.small {
     margin: 0 !important;
@@ -353,36 +353,36 @@ EXTERNAL LINK DOMAIN
 
     font-size: 12px !important;
     line-height: 1.15 !important;
-    }
+}
 
 
 /* ============================================================
-ORIGINAL LEMMY METADATA
-============================================================ */
+   ORIGINAL LEMMY METADATA
+   ============================================================ */
 
 /*
-* These rules remain useful before the userscript converts
-* metadata and as a fallback if it does not run.
-*/
+ * These rules remain useful before the userscript converts
+ * metadata and as a fallback if it does not run.
+ */
 .post-title + .small {
     margin: 3px 0 0 !important;
     padding: 0 !important;
 
     font-size: 12.5px !important;
     line-height: 1.3 !important;
-    }
+}
 
 .post-title + .small .img-icon {
     width: 18px !important;
     height: 18px !important;
 
     margin-right: 3px !important;
-    }
+}
 
 
 /* ============================================================
-OLD-LEMMY METADATA
-============================================================ */
+   OLD-LEMMY METADATA
+   ============================================================ */
 
 .old-lemmy-meta {
     margin: 1px 0 2px !important;
@@ -392,28 +392,28 @@ OLD-LEMMY METADATA
 
     font-size: 12px !important;
     line-height: 1.25 !important;
-    }
+}
 
 .old-lemmy-meta a {
     font-weight: 600 !important;
     text-decoration: none !important;
-    }
+}
 
 .old-lemmy-meta .person-listing,
 .old-lemmy-meta .community-link {
     color: #6593a6 !important;
-    }
+}
 
 .old-lemmy-meta picture,
 .old-lemmy-meta img,
 .old-lemmy-meta .badge {
     display: none !important;
-    }
+}
 
 
 /* ============================================================
-POST ACTION ROW
-============================================================ */
+   POST ACTION ROW
+   ============================================================ */
 
 .post-title + .small + .d-flex {
     margin-top: 2px !important;
@@ -421,7 +421,7 @@ POST ACTION ROW
 
     min-height: 0 !important;
     line-height: 1 !important;
-    }
+}
 
 .post-title + .small + .d-flex .btn {
     margin: 0 !important;
@@ -431,63 +431,63 @@ POST ACTION ROW
 
     min-height: 0 !important;
     line-height: 1 !important;
-    }
+}
 
 .post-title + .small + .d-flex > a:first-child {
     padding-left: 0 !important;
-    }
+}
 
 /* De-emphasize secondary actions */
 .post-title + .small + .d-flex .btn,
 .post-title + .small + .d-flex > a {
     opacity: 0.62;
-    }
+}
 
 /* Comments remain prominent */
 .post-title + .small + .d-flex > a:first-child {
     opacity: 1;
     font-weight: 600;
-    }
+}
 
 .post-title + .small + .d-flex .btn:hover,
 .post-title + .small + .d-flex > a:hover {
     opacity: 1;
-    }
+}
 
 
 /* ============================================================
-COMMENTS LABEL
-============================================================ */
+   COMMENTS LABEL
+   ============================================================ */
 
 .post-listing a[href*="scrollToComments"]::after {
     content: " Comments";
-    }
+}
 
 .post-listing a[href*="scrollToComments"] {
     font-weight: 600;
-    }
+}
 
 
 /* ============================================================
-ICON ALIGNMENT
-============================================================ */
+   ICON ALIGNMENT
+   ============================================================ */
 
 .post-container .icon {
     vertical-align: middle;
-    }
+}
 
 /* ============================================================
-POST / COMMENT PAGE — right-anchor native container
-============================================================ */
+   POST / COMMENT PAGE — right-anchor native container
+   ============================================================ */
 
 .post.container-lg {
     margin-left: 0px !important;
     margin-right: 0px !important;
-    }
+}
 
 /* ============================================================
-COMMENT VOTE COUNTS
-============================================================ */
+   COMMENT VOTE COUNTS
+   ============================================================ */
 /* Bottom vote counts */
 .comment-bottom-btns .reddit-vote-count {
     font-size: 12px !important;
@@ -498,69 +498,70 @@ COMMENT VOTE COUNTS
     margin-right: 2px !important;
 
     color: inherit !important;
-    }
+}
 
 /* Tighten gap before downvote */
 .comment-bottom-btns button[aria-label="Downvote"] {
     margin-left: 2px !important;
-    }
+}
 
 /* Original header vote counts */
 article.comment-node .reddit-original-vote-count {
     display: none !important;
-    }
+}
 
 article.comment-node .reddit-original-vote-separator {
     display: none !important;
-    }
+}
 
 /* ============================================================
-COMMENT HEADER — close gap left by moved vote counts
-============================================================ */
+   COMMENT HEADER — close gap left by moved vote counts
+   ============================================================ */
 
 /* Empty spacer immediately before Lemmy's vote wrapper */
 article.comment-node
-.d-flex.flex-wrap.align-items-center.text-muted.small
+    .d-flex.flex-wrap.align-items-center.text-muted.small
 > .flex-grow-1 {
     display: none !important;
-    }
+}
 
 /* Vote wrapper is now visually empty, so collapse it */
 article.comment-node
-.d-flex.flex-wrap.align-items-center.text-muted.small
+    .d-flex.flex-wrap.align-items-center.text-muted.small
 > div:has(.reddit-original-vote-count) {
     display: none !important;
-    }
+}
 
 /* Small intentional gap before timestamp */
 article.comment-node
-.d-flex.flex-wrap.align-items-center.text-muted.small
+    .d-flex.flex-wrap.align-items-center.text-muted.small
 > span:has(.moment-time) {
     margin-left: 6px !important;
-    }
+}
 
 /* Super Lemmy — left-align expanded images */
 .post-listings .offset-sm-3:has(img.img-expanded) {
     margin-left: 150px !important;
-    }
+}
 
 /* Allow expanded images to overlap the sidebar */
 .post-listings .post-listing:has(img.img-expanded) {
     position: relative;
     z-index: 100;
-    }
+}
 
 .post-listings .offset-sm-3:has(img.img-expanded) {
     position: relative;
     z-index: 101;
     overflow: visible !important;
-    }
+}
 
 /* Super Lemmy — allow the frontpage to use the full window width */
 .home.container-lg {
     max-width: none !important;
     width: 100% !important;
-    }
+}
+
 /* SUPER LEMMY — COMMUNITY PAGE LAYOUT */
 
 .community.container-lg {
@@ -617,3 +618,7 @@ article.comment-node
     object-fit: cover !important;
 }
 
+/* Highlight votes submitted through Super Lemmy */
+.vote-bar button.super-lemmy-voted {
+    color: var(--bs-primary) !important;
+}

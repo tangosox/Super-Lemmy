@@ -134,9 +134,13 @@
               document.createDocumentFragment();
 
         [...newContainer.children].forEach(child => {
-            fragment.appendChild(
-                document.importNode(child, true)
-            );
+            const imported = document.importNode(child, true);
+
+            if (imported.classList?.contains('post-listing')) {
+                imported.dataset.superLemmyImported = 'true';
+            }
+
+            fragment.appendChild(imported);
         });
 
         enableImportedImageExpansion(fragment);
@@ -571,4 +575,143 @@
 
     // Handle thumbnails on the original page.
     openThumbnailLinksInNewTabs(document);
+
+    /*
+ * ============================================================
+ * Voting for infinite-scroll posts
+ * ============================================================
+ */
+
+    const votingInProgress = new WeakSet();
+
+    function getJwt() {
+        const cookie = document.cookie
+        .split('; ')
+        .find(c => c.startsWith('jwt='));
+
+        return cookie
+            ? decodeURIComponent(cookie.slice(4))
+        : null;
+    }
+
+    function getPostId(post) {
+        const link = post.querySelector('a[href*="/post/"]');
+        const match = link?.pathname.match(/^\/post\/(\d+)/);
+
+        return match ? Number(match[1]) : null;
+    }
+
+    async function postApi(path, options = {}) {
+        const token = getJwt();
+
+        if (!token) {
+            throw new Error('Not authenticated');
+        }
+
+        const response = await fetch(`/api/v3/${path}`, {
+            ...options,
+            credentials: 'include',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Lemmy API returned ${response.status}`);
+        }
+
+        return response.json();
+    }
+
+    function updatePostVoteDisplay(post, view) {
+        const score = post.querySelector('.vote-bar .post-score');
+        const up = post.querySelector(
+            '.vote-bar button[aria-label="Upvote"]'
+        );
+        const down = post.querySelector(
+            '.vote-bar button[aria-label="Downvote"]'
+        );
+
+        if (!score || !up || !down) return;
+
+        const vote = view.my_vote ?? 0;
+
+        score.textContent = view.counts.score;
+
+        up.setAttribute('aria-pressed', String(vote === 1));
+        down.setAttribute('aria-pressed', String(vote === -1));
+
+        up.classList.toggle('super-lemmy-voted', vote === 1);
+        down.classList.toggle('super-lemmy-voted', vote === -1);
+
+        const tooltip =
+              `${view.counts.upvotes} Upvotes · ` +
+              `${view.counts.downvotes} Downvotes`;
+
+        for (const el of [score, up, down]) {
+            el.setAttribute('data-tippy-content', tooltip);
+        }
+    }
+
+    document.addEventListener('click', async event => {
+        const target = event.target;
+
+        if (!(target instanceof Element)) return;
+
+        const button = target.closest(
+            '.vote-bar button[aria-label="Upvote"], ' +
+            '.vote-bar button[aria-label="Downvote"]'
+        );
+
+        if (!button) return;
+
+        const post = button.closest(
+            '.post-listing[data-super-lemmy-imported="true"]'
+        );
+
+        if (!post) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (votingInProgress.has(post)) return;
+
+        const postId = getPostId(post);
+        if (!postId) return;
+
+        votingInProgress.add(post);
+
+        try {
+            // Retrieve the actual current vote state.
+            const current = await postApi(`post?id=${postId}`);
+            const previousVote = current.post_view.my_vote ?? 0;
+
+            const clickedVote =
+                  button.getAttribute('aria-label') === 'Upvote'
+            ? 1
+            : -1;
+
+            // Clicking the same vote again removes it.
+            const newVote =
+                  previousVote === clickedVote ? 0 : clickedVote;
+
+            const result = await postApi('post/like', {
+                method: 'POST',
+                body: JSON.stringify({
+                    post_id: postId,
+                    score: newVote
+                })
+            });
+
+            updatePostVoteDisplay(post, result.post_view);
+
+        } catch (error) {
+            console.error('[Super Lemmy] Voting failed:', error);
+        } finally {
+            votingInProgress.delete(post);
+        }
+    }, true);
 })();
+
