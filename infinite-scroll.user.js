@@ -645,6 +645,15 @@
 
         up.classList.toggle('super-lemmy-voted', vote === 1);
         down.classList.toggle('super-lemmy-voted', vote === -1);
+        if (vote !== 1) {
+            up.classList.remove('text-info');
+            up.classList.add('text-muted');
+        }
+
+        if (vote !== -1) {
+            down.classList.remove('text-danger');
+            down.classList.add('text-muted');
+        }
 
         const tooltip =
               `${view.counts.upvotes} Upvotes · ` +
