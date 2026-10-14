@@ -481,8 +481,8 @@ POST / COMMENT PAGE — right-anchor native container
 ============================================================ */
 
 .post.container-lg {
-    margin-left: 8px !important;
-    margin-right: 8px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
     }
 
 /* ============================================================
