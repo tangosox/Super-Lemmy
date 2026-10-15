@@ -85,7 +85,8 @@
         for (const view of data.posts ?? []) {
             postBodies.set(view.post.id, {
                 body: view.post.body ?? '',
-                embedDescription: view.post.embed_description ?? ''
+                embedDescription: view.post.embed_description ?? '',
+                url: view.post.url ?? ''
             });
         }
 
@@ -521,29 +522,38 @@
     setup();
 
     /*
-    * Open post links in new tabs.
+    * Open post, community, and user links in new tabs.
     * Preserve the infinite-scroll feed in the original tab.
     */
     document.addEventListener('click', event => {
         if (event.defaultPrevented || event.button !== 0) return;
 
+        // Preserve standard browser modifier-key behavior.
         if (event.ctrlKey || event.metaKey ||
             event.shiftKey || event.altKey) return;
 
-        const link = event.target.closest('a[href]');
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest('a[href]');
         if (!link) return;
 
-        // Only affect links inside post listings.
+        // Only affect links within post listings.
         if (!link.closest('.post-listings')) return;
 
         const url = new URL(link.href, location.href);
 
-        // Only open Lemmy post pages, not communities or profiles.
+        // Only internal Lemmy links.
         if (url.origin !== location.origin) return;
-        if (!/^\/post\/\d+/.test(url.pathname)) return;
+
+        const isPost = /^\/post\/\d+(?:\/|$)/.test(url.pathname);
+        const isCommunity = /^\/c\/[^/]+/.test(url.pathname);
+        const isUser = /^\/u\/[^/]+/.test(url.pathname);
+
+        if (!isPost && !isCommunity && !isUser) return;
 
         event.preventDefault();
-        event.stopPropagation();
+        event.stopImmediatePropagation();
 
         window.open(url.href, '_blank', 'noopener');
     }, true);
@@ -844,10 +854,6 @@
             const postId = Number(match[1]);
             const content = await getPostBody(postId);
 
-            if (!content.body && !content.embedDescription) {
-                throw new Error('Post has no expandable content');
-            }
-
             const body = document.createElement('div');
             body.className = 'md-div';
 
@@ -862,6 +868,30 @@
                 // Use textContent because preview descriptions are plain text.
                 preview.textContent = content.embedDescription;
                 body.appendChild(preview);
+            }
+
+            // Render direct MP4/WebM/Ogg video links.
+            if (content.url) {
+                const url = new URL(content.url, location.href);
+
+                if (
+                    ['http:', 'https:'].includes(url.protocol) &&
+                    /\.(?:mp4|webm|ogv)$/i.test(url.pathname)
+                ) {
+                    const video = document.createElement('video');
+
+                    video.src = url.href;
+                    video.controls = true;
+                    video.preload = 'metadata';
+                    video.playsInline = true;
+
+                    video.style.display = 'block';
+                    video.style.maxWidth = '100%';
+                    video.style.maxHeight = '65vh';
+                    video.style.marginTop = '8px';
+
+                    body.appendChild(video);
+                }
             }
 
             const wrapper = document.createElement('div');
