@@ -622,3 +622,24 @@ article.comment-node
 .vote-bar button.super-lemmy-voted {
     color: var(--bs-primary) !important;
 }
+
+/* Shift the entire desktop text content to make room for + */
+.post-listings .d-none.d-sm-block .post-container
+> .col.flex-grow-1 > .row > .col.flex-grow-1 {
+    padding-left: 16px !important;
+}
+
+/* Position + in the space before the title */
+.post-listings .d-none.d-sm-block .post-title {
+    position: relative;
+    display: block;
+    padding: 0 !important;
+}
+
+.post-listings .d-none.d-sm-block .post-title > button {
+    position: absolute;
+    left: -25px;
+    top: 0px;
+    margin: 0;
+    padding: 0;
+}
