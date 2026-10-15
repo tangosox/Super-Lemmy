@@ -4,13 +4,17 @@
 // @version      0.3
 // @description  Append-only infinite scrolling for Lemmy
 // @include      /^https:\/\/lemmy\.[^/]+\/.*/
+// @require      https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
 
+/* global markdownit */
+
 (function () {
     'use strict';
 
+    const postBodies = new Map();
     let loading = false;
     let finished = false;
     let sentinel = null;
@@ -76,6 +80,14 @@
         }
 
         const data = await response.json();
+
+        // Cache Markdown bodies and link preview descriptions.
+        for (const view of data.posts ?? []) {
+            postBodies.set(view.post.id, {
+                body: view.post.body ?? '',
+                embedDescription: view.post.embed_description ?? ''
+            });
+        }
 
         return data.next_page || null;
     }
@@ -722,5 +734,161 @@
             votingInProgress.delete(post);
         }
     }, true);
+
+
+    /*
+    * ============================================================
+    * Expand post bodies on infinite-scroll pages
+    * Uses cached Markdown instead of downloading full HTML pages.
+    * ============================================================
+    */
+    const postMarkdownRenderer = markdownit({
+        html: false,
+        linkify: true,
+        breaks: true
+    });
+
+    async function getPostBody(postId) {
+        if (postBodies.has(postId)) {
+            return postBodies.get(postId);
+        }
+
+        const response = await fetch(`/api/v3/post?id=${postId}`, {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Post API returned HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const post = data.post_view?.post;
+
+        if (!post) {
+            throw new Error('Post data not found');
+        }
+
+        const content = {
+            body: post.body ?? '',
+            embedDescription: post.embed_description ?? ''
+        };
+
+        postBodies.set(postId, content);
+        return content;
+    }
+
+    document.addEventListener('click', async event => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const button = target.closest('.post-title > button');
+        if (!button) return;
+
+        const post = button.closest(
+            '.post-listing[data-super-lemmy-imported="true"]'
+        );
+        if (!post) return;
+
+        const layout = button.closest(
+            '.d-none.d-sm-block, .d-block.d-sm-none'
+        );
+        const title = button.closest('.post-title');
+
+        if (!layout || !title) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        function setIcon(expanded) {
+            const use = button.querySelector('svg use');
+            if (!use) return;
+
+            const href = use.getAttribute('href') ||
+                  use.getAttribute('xlink:href');
+
+            if (!href) return;
+
+            const updated = href.replace(
+                /#icon-(?:plus|minus)-square$/,
+                expanded ? '#icon-minus-square' : '#icon-plus-square'
+            );
+
+            use.setAttribute('href', updated);
+            use.setAttribute('xlink:href', updated);
+        }
+
+        // Already rendered: show or hide without another request.
+        const existing = layout.querySelector(
+            '.super-lemmy-post-body'
+        );
+
+        if (existing) {
+            const expanding = existing.hidden;
+            existing.hidden = !expanding;
+            setIcon(expanding);
+            return;
+        }
+
+        // Prevent simultaneous requests from repeated clicks.
+        if (button.dataset.superLemmyLoading === 'true') return;
+        button.dataset.superLemmyLoading = 'true';
+
+        try {
+            const link = post.querySelector('a[href*="/post/"]');
+            const match = link?.pathname.match(/^\/post\/(\d+)/);
+
+            if (!match) {
+                throw new Error('Post ID not found');
+            }
+
+            const postId = Number(match[1]);
+            const content = await getPostBody(postId);
+
+            if (!content.body && !content.embedDescription) {
+                throw new Error('Post has no expandable content');
+            }
+
+            const body = document.createElement('div');
+            body.className = 'md-div';
+
+            if (content.body) {
+                body.innerHTML = postMarkdownRenderer.render(content.body);
+            }
+
+            if (content.embedDescription) {
+                const preview = document.createElement('div');
+                preview.className = 'card p-3 my-2';
+
+                // Use textContent because preview descriptions are plain text.
+                preview.textContent = content.embedDescription;
+                body.appendChild(preview);
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'super-lemmy-post-body';
+            wrapper.appendChild(body);
+
+            // Open links in new tabs.
+            wrapper.querySelectorAll('a[href]').forEach(link => {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            });
+
+            // Insert the rendered body beneath the post title.
+            title.after(wrapper);
+
+            setIcon(true);
+
+        } catch (error) {
+            console.error(
+                '[Super Lemmy] Post expansion failed:',
+                error
+            );
+        } finally {
+            delete button.dataset.superLemmyLoading;
+        }
+    }, true);
+
 })();
+
 
