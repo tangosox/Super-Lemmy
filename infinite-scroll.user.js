@@ -38,10 +38,15 @@
     function getCurrentOptions() {
         const params = new URLSearchParams(location.search);
 
+        const communityMatch = location.pathname.match(/^\/c\/([^/]+)/);
+
         return {
             sort: params.get('sort') || 'Active',
             listingType: params.get('listingType') || 'All',
-            pageCursor: params.get('pageCursor')
+            pageCursor: params.get('pageCursor'),
+            community: communityMatch
+            ? decodeURIComponent(communityMatch[1])
+            : null
         };
     }
 
@@ -64,6 +69,11 @@
 
         if (cursor) {
             params.set('page_cursor', cursor);
+        }
+
+        if (options.community) {
+            params.set('community_name', options.community);
+            params.delete('type_');
         }
 
         const response = await fetch(
@@ -108,7 +118,7 @@
         });
 
         const response = await fetch(
-            `/?${params}`,
+            `${location.pathname}?${params}`,
             {
                 credentials: 'include'
             }
