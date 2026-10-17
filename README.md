@@ -122,12 +122,6 @@ Both the CSS and JavaScript enhancements should now be active on the configured 
 
 For best results, use all four files together.
 
-### 3. Reload Lemmy
-
-Refresh your Lemmy page. Both the styling and JavaScript enhancements should now be active.
-
-For best results, use the CSS and JavaScript files together.
-
 ## Compatibility
 
 Super Lemmy is currently developed and tested primarily with:
