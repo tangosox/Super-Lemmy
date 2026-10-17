@@ -81,26 +81,46 @@ Super Lemmy itself is not yet a standalone browser extension.
 1. Install Stylus.
 2. Create a new style for each CSS file.
 3. Copy the contents of `frontpage.css` and `comments.css` into their respective styles.
-4. Set the styles to apply to your Lemmy instance.
-5. Save and enable both styles.
+4. In each style's **Applies to** section, select **URLs matching the regexp**.
+5. Enter the following expression:
 
-For Lemmy domains beginning with `lemmy.`, the following Stylus URL regular expression can be used:
+   ```regex
+   ^https?://(lemmy\.[^/]+|feddit\.org)(/|$)
+   ```
 
-```regex
-^https://lemmy\.[^/]+/
-```
+6. Save and enable both styles.
 
-Other instances, such as `feddit.org`, can be added separately.
+This single expression supports Lemmy instances with domains beginning with `lemmy.`, such as `lemmy.world` and `lemmy.ca`, as well as `feddit.org`.
+
+To add another instance with a different domain name, extend the expression with another alternative separated by `|`.
 
 ### 2. Install the JavaScript
 
 1. Install Tampermonkey.
 2. Create a new userscript.
-3. Copy the contents of `comments.user.js` into it.
+3. Copy the complete contents of `comments.user.js`, including its metadata header.
 4. Save and enable the script.
 5. Repeat with `infinite-scroll.user.js`.
 
-Check the `@match` or `@include` directives near the top of each script to ensure they include your Lemmy instance.
+Both scripts should contain this directive in their existing metadata headers:
+
+```javascript
+// @include      /^https:\/\/(lemmy\.[^/]+|feddit\.org)(\/|$)/
+```
+
+This uses a regular expression in Tampermonkey's `@include` directive to support the same Lemmy instances as the Stylus styles.
+
+The patterns differ slightly because Stylus accepts the regular expression directly, while Tampermonkey requires JavaScript regex delimiters and escaped forward slashes.
+
+Keep the existing metadata directives and use the same `@include` rule in both userscripts.
+
+### 3. Reload Lemmy
+
+Refresh your Lemmy page after saving the styles and scripts.
+
+Both the CSS and JavaScript enhancements should now be active on the configured instances.
+
+For best results, use all four files together.
 
 ### 3. Reload Lemmy
 
