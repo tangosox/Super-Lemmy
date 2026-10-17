@@ -73,7 +73,11 @@ article.comment-node > .ms-2 > .d-flex:first-child {
 }
 
 .comment-content p {
-    margin: 2px 0 !important;
+    margin: 0 0 0.85em !important;
+}
+
+.comment-content p:last-child {
+    margin-bottom: 0 !important;
 }
 
 
