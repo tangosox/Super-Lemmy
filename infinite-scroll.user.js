@@ -3,7 +3,7 @@
 // @namespace    paul-lemmy
 // @version      0.3
 // @description  Append-only infinite scrolling for Lemmy
-// @include      /^https:\/\/lemmy\.[^/]+\/.*/
+// @include      /^https:\/\/(lemmy\.[^/]+|feddit\.org)(\/|$)/
 // @require      https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js
 // @run-at       document-idle
 // @grant        none
@@ -42,11 +42,11 @@
 
         return {
             sort: params.get('sort') || 'Active',
-            listingType: params.get('listingType') || 'All',
-            pageCursor: params.get('pageCursor'),
-            community: communityMatch
-            ? decodeURIComponent(communityMatch[1])
-            : null
+ listingType: params.get('listingType') || 'All',
+ pageCursor: params.get('pageCursor'),
+ community: communityMatch
+ ? decodeURIComponent(communityMatch[1])
+ : null
         };
     }
 
@@ -141,7 +141,7 @@
     function appendPosts(doc) {
         const currentContainer = getPostContainer();
         const newContainer =
-              doc.querySelector('.post-listings');
+        doc.querySelector('.post-listings');
 
         if (!currentContainer || !newContainer) {
             throw new Error(
@@ -154,7 +154,7 @@
          * post-listings container: posts, separators, etc.
          */
         const fragment =
-              document.createDocumentFragment();
+        document.createDocumentFragment();
 
         [...newContainer.children].forEach(child => {
             const imported = document.importNode(child, true);
@@ -334,7 +334,7 @@
             img.dataset.superLemmyManuallyResized = 'true';
 
             img.style.width =
-                `${Math.max(100, startWidth + delta)}px`;
+            `${Math.max(100, startWidth + delta)}px`;
         });
 
         function finish(event) {
@@ -396,7 +396,7 @@
                     try {
                         const url = new URL(a.href, location.href);
                         return /^https?:$/.test(url.protocol) &&
-                            /\.(?:png|jpe?g|gif|webp|avif)$/i.test(url.pathname);
+                        /\.(?:png|jpe?g|gif|webp|avif)$/i.test(url.pathname);
                     } catch {
                         return false;
                     }
@@ -422,7 +422,7 @@
 
                 const wrapper = document.createElement('div');
                 wrapper.className =
-                    'offset-sm-3 my-2 d-none d-sm-block super-lemmy-expanded-image';
+                'offset-sm-3 my-2 d-none d-sm-block super-lemmy-expanded-image';
 
                 const link = document.createElement('a');
                 link.className = 'd-inline-block';
@@ -489,13 +489,13 @@
             if (entries.some(entry => entry.isIntersecting)) loadMore();
         }, { rootMargin: '0px', threshold: 1 });
 
-        scrollObserver.observe(sentinel);
+            scrollObserver.observe(sentinel);
     }
 
     /*
-    * Enable resizing for native Lemmy expansions,
-    * including images on the original first page.
-    */
+     * Enable resizing for native Lemmy expansions,
+     * including images on the original first page.
+     */
     function observeExpandedImages() {
         const initialize = () => {
             document.querySelectorAll('img.img-expanded').forEach(img => {
@@ -532,9 +532,9 @@
     setup();
 
     /*
-    * Open post, community, and user links in new tabs.
-    * Preserve the infinite-scroll feed in the original tab.
-    */
+     * Open post, community, and user links in new tabs.
+     * Preserve the infinite-scroll feed in the original tab.
+     */
     document.addEventListener('click', event => {
         if (event.defaultPrevented || event.button !== 0) return;
 
@@ -569,9 +569,9 @@
     }, true);
 
     /*
- * Open direct image links in new tabs.
- * Handles both original and infinite-scroll posts.
- */
+     * Open direct image links in new tabs.
+     * Handles both original and infinite-scroll posts.
+     */
     document.addEventListener('click', event => {
         if (event.defaultPrevented || event.button !== 0) return;
 
@@ -609,10 +609,10 @@
     openThumbnailLinksInNewTabs(document);
 
     /*
- * ============================================================
- * Voting for infinite-scroll posts
- * ============================================================
- */
+     * ============================================================
+     * Voting for infinite-scroll posts
+     * ============================================================
+     */
 
     const votingInProgress = new WeakSet();
 
@@ -622,7 +622,7 @@
         .find(c => c.startsWith('jwt='));
 
         return cookie
-            ? decodeURIComponent(cookie.slice(4))
+        ? decodeURIComponent(cookie.slice(4))
         : null;
     }
 
@@ -688,8 +688,8 @@
         }
 
         const tooltip =
-              `${view.counts.upvotes} Upvotes · ` +
-              `${view.counts.downvotes} Downvotes`;
+        `${view.counts.upvotes} Upvotes · ` +
+        `${view.counts.downvotes} Downvotes`;
 
         for (const el of [score, up, down]) {
             el.setAttribute('data-tippy-content', tooltip);
@@ -730,13 +730,13 @@
             const previousVote = current.post_view.my_vote ?? 0;
 
             const clickedVote =
-                  button.getAttribute('aria-label') === 'Upvote'
+            button.getAttribute('aria-label') === 'Upvote'
             ? 1
             : -1;
 
             // Clicking the same vote again removes it.
             const newVote =
-                  previousVote === clickedVote ? 0 : clickedVote;
+            previousVote === clickedVote ? 0 : clickedVote;
 
             const result = await postApi('post/like', {
                 method: 'POST',
@@ -757,11 +757,11 @@
 
 
     /*
-    * ============================================================
-    * Expand post bodies on infinite-scroll pages
-    * Uses cached Markdown instead of downloading full HTML pages.
-    * ============================================================
-    */
+     * ============================================================
+     * Expand post bodies on infinite-scroll pages
+     * Uses cached Markdown instead of downloading full HTML pages.
+     * ============================================================
+     */
     const postMarkdownRenderer = markdownit({
         html: false,
         linkify: true,
@@ -824,13 +824,13 @@
             if (!use) return;
 
             const href = use.getAttribute('href') ||
-                  use.getAttribute('xlink:href');
+            use.getAttribute('xlink:href');
 
             if (!href) return;
 
             const updated = href.replace(
                 /#icon-(?:plus|minus)-square$/,
-                expanded ? '#icon-minus-square' : '#icon-plus-square'
+                                         expanded ? '#icon-minus-square' : '#icon-plus-square'
             );
 
             use.setAttribute('href', updated);
@@ -930,5 +930,4 @@
     }, true);
 
 })();
-
 

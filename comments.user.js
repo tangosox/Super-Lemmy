@@ -3,7 +3,7 @@
 // @namespace    paul-lemmy
 // @version      0.2
 // @description  Adds dynamic comment-depth styling hooks to Lemmy
-// @include      /^https:\/\/lemmy\.[^/]+\/.*/
+// @include      /^https:\/\/(lemmy\.[^/]+|feddit\.org)(\/|$)/
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -524,4 +524,3 @@
     }, true);
 
 })();
-
