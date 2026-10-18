@@ -1,11 +1,11 @@
 /* ============================================================
-   LEMMY.WORLD — OLD-LEMMY-INSPIRED LAYOUT
-   ============================================================ */
+ *  LEMMY.WORLD — OLD-LEMMY-INSPIRED LAYOUT
+ *  ============================================================ */
 
 
 /* ============================================================
-   GLOBAL PAGE / NAVBAR
-   ============================================================ */
+ *  GLOBAL PAGE / NAVBAR
+ *  ============================================================ */
 
 /* Compact gap below navbar */
 main.mt-4 {
@@ -24,41 +24,41 @@ nav.navbar > .container-fluid,
 .navbar > .container,
 .navbar > .container-fluid,
 #navbar {
-    max-width: none !important;
-    width: 100% !important;
+max-width: none !important;
+width: 100% !important;
 
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+margin-left: 0 !important;
+margin-right: 0 !important;
 
-    padding-left: 8px !important;
-    padding-right: 8px !important;
+padding-left: 8px !important;
+padding-right: 8px !important;
 }
 
 .shadow-sm:has(#navbar) {
-    background: #303638 !important;
-    border-bottom: 2px solid #087f5b !important;
+    background: #1c2021 !important;
+    border-bottom: 1px solid #087f5b66 !important;
     box-shadow: none !important;
 }
 
 #navbar {
-    min-height: 50px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+min-height: 50px !important;
+padding-top: 0 !important;
+padding-bottom: 0 !important;
 }
 
 #navbar .navbar-brand {
-    font-weight: 700 !important;
+font-weight: 700 !important;
 }
 
 #navbar .nav-link {
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
+padding-top: 6px !important;
+padding-bottom: 6px !important;
 }
 
 
 /* ============================================================
-   HOME PAGE LAYOUT
-   ============================================================ */
+ *  HOME PAGE LAYOUT
+ *  ============================================================ */
 
 .home.container-lg {
     max-width: 1500px !important;
@@ -105,8 +105,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   COMMUNITY SPOTLIGHT
-   ============================================================ */
+ *  COMMUNITY SPOTLIGHT
+ *  ============================================================ */
 
 .home #tagline {
     margin: 0 0 6px 0 !important;
@@ -139,8 +139,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   HOME FILTER / SORT CONTROLS
-   ============================================================ */
+ *  HOME FILTER / SORT CONTROLS
+ *  ============================================================ */
 
 .home .main-content-wrapper > div > .row.align-items-center {
     margin-top: 0 !important;
@@ -190,8 +190,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST LIST
-   ============================================================ */
+ *  POST LIST
+ *  ============================================================ */
 
 .post-listings {
     width: 100% !important;
@@ -223,8 +223,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST ROW
-   ============================================================ */
+ *  POST ROW
+ *  ============================================================ */
 
 .post-container {
     margin: 0 !important;
@@ -247,8 +247,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   VOTE COLUMN
-   ============================================================ */
+ *  VOTE COLUMN
+ *  ============================================================ */
 
 .post-container > .col.flex-grow-0:first-child {
     width: 36px !important;
@@ -276,8 +276,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST THUMBNAIL
-   ============================================================ */
+ *  POST THUMBNAIL
+ *  ============================================================ */
 
 .post-container .row > .col.flex-grow-0.px-0 {
     flex: 0 0 102px !important;
@@ -301,8 +301,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST TEXT COLUMN
-   ============================================================ */
+ *  POST TEXT COLUMN
+ *  ============================================================ */
 
 .post-container .row > .col.flex-grow-1 {
     min-width: 0 !important;
@@ -311,8 +311,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST TITLE
-   ============================================================ */
+ *  POST TITLE
+ *  ============================================================ */
 
 .post-title {
     margin: 0 !important;
@@ -344,8 +344,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   EXTERNAL LINK DOMAIN
-   ============================================================ */
+ *  EXTERNAL LINK DOMAIN
+ *  ============================================================ */
 
 .post-container .post-title + p.small {
     margin: 0 !important;
@@ -357,8 +357,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   ORIGINAL LEMMY METADATA
-   ============================================================ */
+ *  ORIGINAL LEMMY METADATA
+ *  ============================================================ */
 
 /*
  * These rules remain useful before the userscript converts
@@ -381,8 +381,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   OLD-LEMMY METADATA
-   ============================================================ */
+ *  OLD-LEMMY METADATA
+ *  ============================================================ */
 
 .old-lemmy-meta {
     margin: 1px 0 2px !important;
@@ -412,8 +412,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   POST ACTION ROW
-   ============================================================ */
+ *  POST ACTION ROW
+ *  ============================================================ */
 
 .post-title + .small + .d-flex {
     margin-top: 2px !important;
@@ -456,8 +456,8 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   COMMENTS LABEL
-   ============================================================ */
+ *  COMMENTS LABEL
+ *  ============================================================ */
 
 .post-listing a[href*="scrollToComments"]::after {
     content: " Comments";
@@ -469,16 +469,16 @@ nav.navbar > .container-fluid,
 
 
 /* ============================================================
-   ICON ALIGNMENT
-   ============================================================ */
+ *  ICON ALIGNMENT
+ *  ============================================================ */
 
 .post-container .icon {
     vertical-align: middle;
 }
 
 /* ============================================================
-   POST / COMMENT PAGE — right-anchor native container
-   ============================================================ */
+ *  POST / COMMENT PAGE — right-anchor native container
+ *  ============================================================ */
 
 .post.container-lg {
     margin-left: 0px !important;
@@ -486,8 +486,8 @@ nav.navbar > .container-fluid,
 }
 
 /* ============================================================
-   COMMENT VOTE COUNTS
-   ============================================================ */
+ *  COMMENT VOTE COUNTS
+ *  ============================================================ */
 /* Bottom vote counts */
 .comment-bottom-btns .reddit-vote-count {
     font-size: 12px !important;
@@ -515,26 +515,26 @@ article.comment-node .reddit-original-vote-separator {
 }
 
 /* ============================================================
-   COMMENT HEADER — close gap left by moved vote counts
-   ============================================================ */
+ *  COMMENT HEADER — close gap left by moved vote counts
+ *  ============================================================ */
 
 /* Empty spacer immediately before Lemmy's vote wrapper */
 article.comment-node
-    .d-flex.flex-wrap.align-items-center.text-muted.small
+.d-flex.flex-wrap.align-items-center.text-muted.small
 > .flex-grow-1 {
     display: none !important;
 }
 
 /* Vote wrapper is now visually empty, so collapse it */
 article.comment-node
-    .d-flex.flex-wrap.align-items-center.text-muted.small
+.d-flex.flex-wrap.align-items-center.text-muted.small
 > div:has(.reddit-original-vote-count) {
     display: none !important;
 }
 
 /* Small intentional gap before timestamp */
 article.comment-node
-    .d-flex.flex-wrap.align-items-center.text-muted.small
+.d-flex.flex-wrap.align-items-center.text-muted.small
 > span:has(.moment-time) {
     margin-left: 6px !important;
 }
@@ -597,8 +597,8 @@ article.comment-node
 }
 
 /* ============================================================
-   SUPER LEMMY — COMPACT COMMUNITY HEADER
-   ============================================================ */
+ *  SUPER LEMMY — COMPACT COMMUNITY HEADER
+ *  ============================================================ */
 
 /* Restrict community banner height */
 .community .community-banner,
@@ -642,4 +642,72 @@ article.comment-node
     top: 0px;
     margin: 0;
     padding: 0;
+}
+
+/* Sticky, independently scrollable sidebar */
+.home.container-lg aside:has(.site-sidebar) {
+    position: sticky;
+    top: 34px;
+    align-self: flex-start;
+    height: calc(100vh - 34px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+}
+
+/* Let the sidebar content use its natural height */
+.home.container-lg .site-sidebar {
+    max-height: none;
+    overflow: visible;
+}
+
+/* ==========================================
+   Compact sticky Lemmy navbar
+   ========================================== */
+
+/* Keep the navigation visible */
+.lemmy-site > .shadow-sm {
+    position: sticky !important;
+    top: 0;
+    z-index: 1050;
+    background: var(--bs-body-bg);
+}
+
+/* Reduce navbar height and spacing */
+#navbar {
+    min-height: 34px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Shrink branding and logo */
+#navbar .navbar-brand {
+    font-size: 16px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+#navbar .navbar-brand img {
+    max-height: 28px !important;
+    width: auto;
+}
+
+/* Compact navigation links */
+#navbar .nav-link {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    font-size: 14px;
+}
+
+/* Compact buttons and dropdowns */
+#navbar .btn {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+/* Keep everything vertically centered */
+#navbar .navbar-nav,
+#navbar .navbar-brand {
+    align-items: center;
 }
