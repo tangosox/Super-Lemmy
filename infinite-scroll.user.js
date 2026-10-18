@@ -286,8 +286,8 @@
                 rightEdge - img.getBoundingClientRect().left - 20
             );
 
-            const maxInitialWidth = window.innerWidth * 0.60;
-            const maxInitialHeight = window.innerHeight * 0.65;
+            const maxInitialWidth = window.innerWidth * 0.45;
+            const maxInitialHeight = window.innerHeight * 0.55;
 
             const scale = Math.min(
                 1,
