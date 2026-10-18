@@ -644,18 +644,20 @@ article.comment-node
     padding: 0;
 }
 
-/* Sticky, independently scrollable sidebar */
-.home.container-lg aside:has(.site-sidebar) {
+/* Sticky, independently scrollable sidebar on home and community pages */
+:is(.home.container-lg, .community.container-lg)
+> .row > aside.col-md-4 {
     position: sticky;
-    top: 34px;
+    top: 54px;
     align-self: flex-start;
-    height: calc(100vh - 34px);
+    height: calc(100vh - 54px);
     overflow-y: auto;
     overscroll-behavior-y: contain;
 }
 
-/* Let the sidebar content use its natural height */
-.home.container-lg .site-sidebar {
+/* Let sidebar contents retain their natural height */
+:is(.home.container-lg .site-sidebar,
+    .community.container-lg .community-sidebar) {
     max-height: none;
     overflow: visible;
 }
