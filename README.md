@@ -85,7 +85,7 @@ Super Lemmy itself is not yet a standalone browser extension.
 5. Enter the following expression:
 
    ```regex
-   ^https?://(lemmy\.[^/]+|feddit\.org)(/|$)
+   ^https?://(lemmy\.[^/]+|feddit\.org)(/.*)?$
    ```
 
 6. Save and enable both styles.
