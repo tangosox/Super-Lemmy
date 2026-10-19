@@ -167,6 +167,7 @@
         });
 
         enableImportedImageExpansion(fragment);
+        addVideoExpandButtons(fragment);
 
         // Open linked thumbnails in new tabs on appended pages.
         fragment.querySelectorAll('a.thumbnail[href]').forEach(link => {
@@ -445,6 +446,72 @@
         });
     }
 
+
+    function addVideoExpandButtons(container = document) {
+        const posts = container.querySelectorAll('.post-listing');
+
+        posts.forEach(post => {
+            // Identify direct video links from the existing thumbnail.
+            const thumbnail = [...post.querySelectorAll('a.thumbnail[href]')]
+            .find(link => {
+                try {
+                    const url = new URL(link.href, location.href);
+                    return ['http:', 'https:'].includes(url.protocol) &&
+                        /\.(?:mp4|webm|ogv)$/i.test(url.pathname);
+                } catch {
+                    return false;
+                }
+            });
+
+            if (!thumbnail) return;
+
+            // Desktop and mobile layouts have separate titles.
+            post.querySelectorAll('.post-title').forEach(title => {
+                // Never duplicate an existing Lemmy expansion button.
+                if (title.querySelector(':scope > button')) return;
+
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className =
+                    'btn btn-sm btn-link link-dark ' +
+                    'link-opacity-75 link-opacity-100-hover ' +
+                    'py-0 align-baseline';
+
+                button.dataset.superLemmyExpandVideo = 'true';
+                button.setAttribute('aria-label', 'Expand post');
+                button.setAttribute('aria-expanded', 'false');
+
+                const svg = document.createElementNS(
+                    'http://www.w3.org/2000/svg', 'svg'
+                );
+                svg.setAttribute('class', 'icon icon-inline');
+
+                const use = document.createElementNS(
+                    'http://www.w3.org/2000/svg', 'use'
+                );
+
+                // Reuse Lemmy's own SVG sprite path.
+                const existingUse = document.querySelector('svg use');
+                const sprite = (
+                    existingUse?.getAttribute('href') ||
+                    existingUse?.getAttribute('xlink:href') ||
+                    ''
+                ).split('#')[0];
+
+                if (!sprite) return;
+
+                const iconUrl = `${sprite}#icon-plus-square`;
+                use.setAttribute('href', iconUrl);
+                use.setAttribute('xlink:href', iconUrl);
+
+                svg.appendChild(use);
+                button.appendChild(svg);
+                title.appendChild(button);
+            });
+        });
+    }
+
+
     function setup() {
         const postContainer = getPostContainer();
         const paginator = document.querySelector('.paginator');
@@ -482,6 +549,8 @@
         nextCursor = null;
         activePostContainer = postContainer;
         activePageKey = pageKey;
+
+        addVideoExpandButtons(postContainer);
 
         sentinel = document.createElement('div');
         sentinel.id = 'lemmy-infinite-scroll-sentinel';
@@ -714,7 +783,6 @@
         const post = button.closest(
             '.post-listing[data-super-lemmy-imported="true"]'
         );
-
         if (!post) return;
 
         event.preventDefault();
@@ -793,7 +861,8 @@
 
         const content = {
             body: post.body ?? '',
-            embedDescription: post.embed_description ?? ''
+            embedDescription: post.embed_description ?? '',
+            url: post.url ?? ''
         };
 
         postBodies.set(postId, content);
@@ -807,10 +876,16 @@
         const button = target.closest('.post-title > button');
         if (!button) return;
 
-        const post = button.closest(
-            '.post-listing[data-super-lemmy-imported="true"]'
-        );
+        const post = button.closest('.post-listing');
         if (!post) return;
+
+        // Handle imported posts and our own added video buttons.
+        // Leave original Lemmy expansion buttons to Lemmy.
+        const imported = post.dataset.superLemmyImported === 'true';
+        const addedVideoButton =
+              button.dataset.superLemmyExpandVideo === 'true';
+
+        if (!imported && !addedVideoButton) return;
 
         const layout = button.closest(
             '.d-none.d-sm-block, .d-block.d-sm-none'
@@ -838,6 +913,7 @@
 
             use.setAttribute('href', updated);
             use.setAttribute('xlink:href', updated);
+            button.setAttribute('aria-expanded', String(expanded));
         }
 
         // Already rendered: show or hide without another request.
@@ -847,6 +923,14 @@
 
         if (existing) {
             const expanding = existing.hidden;
+
+            // Stop playback when collapsing the expanded post.
+            if (!expanding) {
+                existing.querySelectorAll('video').forEach(video => {
+                    video.pause();
+                });
+            }
+
             existing.hidden = !expanding;
             setIcon(expanding);
             return;
