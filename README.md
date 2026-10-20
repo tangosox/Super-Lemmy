@@ -52,11 +52,11 @@ This is a personal, experimental project, and contributions, code reviews, and b
 
 ### Front Page
 
-![Super Lemmy front page](frontpage.png)
+![Super Lemmy front page](images/frontpage.png)
 
 ### Comment Threads
 
-![Super Lemmy color-coded comment threads](comments.png)
+![Super Lemmy color-coded comment threads](images/comments.png)
 
 ## Installation
 
