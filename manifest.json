@@ -5,11 +5,15 @@
   "version": "0.1.0",
   "description": "Classic Reddit-inspired interface for Lemmy",
   "browser_specific_settings": {
-    "gecko": {
-      "id": "super-lemmy@tangosox.github"
+  "gecko": {
+    "id": "super-lemmy@tangosox.github",
+    "update_url": "https://tangosox.github.io/Super-Lemmy/updates.json",
+    "data_collection_permissions": {
+      "required": ["none"]
     }
-  },
-  "content_scripts": [
+  }
+},
+"content_scripts": [
     {
       "matches": [
         "https://lemmy.world/*",
