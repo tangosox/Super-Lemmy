@@ -6,6 +6,8 @@ Super Lemmy is a collection of custom CSS and JavaScript enhancements designed t
 
 The goal is a compact, information-dense interface with improved comment navigation, image handling, and browsing.
 
+Super Lemmy is available as a standalone Firefox extension, with the original Stylus and Tampermonkey installation methods also supported.
+
 The project is currently in early development. Feedback, bug reports, and suggestions are welcome.
 
 ## AI Assistance
@@ -67,39 +69,44 @@ This is a personal, experimental project, and contributions, code reviews, and b
 
 ## Installation
 
-Super Lemmy currently uses two Firefox extensions:
+There are two ways to install Super Lemmy:
+
+1. **Standalone Firefox extension (recommended)** — Install one signed extension containing all CSS and JavaScript functionality.
+2. **Stylus + Tampermonkey (manual installation)** — Install and maintain the original stylesheets and userscripts individually.
+
+Use only one installation method at a time to avoid duplicate event handlers and conflicting styles.
+
+### Option 1: Firefox extension (recommended)
+
+1. Visit the [Super Lemmy GitHub Releases page](https://github.com/tangosox/Super-Lemmy/releases).
+2. Open the latest release and click the signed `.xpi` file.
+3. If Firefox displays an installation prompt, approve it.
+4. If the file downloads instead, open it in Firefox or drag it onto the `about:addons` page, then approve installation.
+
+The extension automatically loads all required CSS and JavaScript. **Stylus and Tampermonkey are not required.**
+
+#### Extension updates
+
+The Firefox extension includes a self-hosted update URL:
+
+`https://tangosox.github.io/Super-Lemmy/updates.json`
+
+Firefox uses this URL to check for newer signed releases.
+
+Automatic update detection is configured. However, automated building, Mozilla signing, and GitHub release publishing are still being developed. Until that workflow is complete, new signed releases are published manually.
+
+The extension does not automatically update when individual source-code commits are pushed to GitHub.
+
+### Option 2: Stylus and Tampermonkey
+
+The original installation method remains available for users who prefer separate stylesheets and userscripts.
+
+Required Firefox extensions:
 
 - **[Stylus](https://addons.mozilla.org/firefox/addon/styl-us/)** — Applies the custom CSS.
 - **[Tampermonkey](https://www.tampermonkey.net/)** — Runs the JavaScript enhancements.
 
-Super Lemmy itself is not yet a standalone browser extension.
-
-### Repository structure
-
-```text
-Super-Lemmy/
-├── images/
-│   ├── comments.png
-│   └── frontpage.png
-├── src/
-│   ├── comments.css
-│   ├── comments.user.js
-│   ├── frontpage.css
-│   └── infinite-scroll.user.js
-├── LICENSE
-└── README.md
-```
-
-### Source files
-
-| File | Purpose |
-|---|---|
-| [`src/frontpage.css`](src/frontpage.css) | Front-page layout, post styling, and shared interface adjustments |
-| [`src/comments.css`](src/comments.css) | Post and comment-page styling, indentation, and thread colors |
-| [`src/comments.user.js`](src/comments.user.js) | Comment controls, metadata adjustments, and image resizing |
-| [`src/infinite-scroll.user.js`](src/infinite-scroll.user.js) | Infinite scrolling, imported post interaction, voting, and expanded content |
-
-### 1. Install the CSS
+#### 1. Install the CSS
 
 1. Install Stylus.
 2. Create a new style for each CSS file.
@@ -119,7 +126,7 @@ This expression supports Lemmy instances with domains beginning with `lemmy.`, s
 
 To add another instance with a different domain name, extend the expression with another alternative separated by `|`.
 
-### 2. Install the JavaScript
+#### 2. Install the JavaScript
 
 1. Install Tampermonkey.
 2. Create a new userscript.
@@ -139,7 +146,7 @@ The patterns differ slightly because Stylus accepts the regular expression direc
 
 Keep the other existing metadata directives intact, including any external library dependencies.
 
-### 3. Reload Lemmy
+#### 3. Reload Lemmy
 
 Refresh your Lemmy page after saving the styles and scripts.
 
@@ -152,6 +159,47 @@ Verify that:
 
 For best results, use all four files together.
 
+#### Manual installation updates
+
+After downloading updated source files, copy the revised CSS into Stylus and JavaScript into Tampermonkey.
+
+Updating the Git repository does not automatically update installed Stylus styles or Tampermonkey userscripts.
+
+## Repository structure
+
+```text
+Super-Lemmy/
+├── images/
+│   ├── comments.png
+│   └── frontpage.png
+├── src/
+│   ├── comments.css
+│   ├── comments.user.js
+│   ├── frontpage.css
+│   └── infinite-scroll.user.js
+├── vendor/
+│   └── markdown-it.min.js
+├── .gitignore
+├── LICENSE
+├── manifest.json
+├── README.md
+└── updates.json
+```
+
+The `web-ext-artifacts/` directory is generated locally when building the extension and is excluded from Git.
+
+### Source files
+
+| File | Purpose |
+|---|---|
+| [`src/frontpage.css`](src/frontpage.css) | Front-page layout, post styling, and shared interface adjustments |
+| [`src/comments.css`](src/comments.css) | Post and comment-page styling, indentation, and thread colors |
+| [`src/comments.user.js`](src/comments.user.js) | Comment controls, metadata adjustments, and image resizing |
+| [`src/infinite-scroll.user.js`](src/infinite-scroll.user.js) | Infinite scrolling, imported post interaction, voting, and expanded content |
+| [`manifest.json`](manifest.json) | Firefox extension configuration, permissions, and content script loading |
+| [`vendor/markdown-it.min.js`](vendor/markdown-it.min.js) | Bundled Markdown rendering dependency |
+| [`updates.json`](updates.json) | Self-hosted Firefox extension update manifest |
+
 ### Cloning the repository
 
 To download the complete project using Git:
@@ -161,24 +209,50 @@ git clone https://github.com/tangosox/Super-Lemmy.git
 cd Super-Lemmy
 ```
 
-The CSS and JavaScript source files are located in the `src/` directory.
+Alternatively, use GitHub's **Code → Download ZIP** option.
 
-Alternatively, use GitHub's **Code → Download ZIP** option to download the repository without Git.
+### Development
 
-### Updating
+The Firefox extension can be loaded directly from the repository without building or signing it.
 
-If you cloned the repository using Git, retrieve the latest changes with:
+1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on**.
+3. Select `manifest.json` from the repository.
+4. Visit a supported Lemmy instance.
+
+After modifying the source files, reload the temporary extension and refresh the page.
+
+Disable the permanently installed Super Lemmy extension while testing a temporary development copy to avoid conflicts.
+
+For command-line development, Mozilla's `web-ext` utility can also be used:
 
 ```bash
-cd Super-Lemmy
-git pull
+web-ext run --source-dir .
 ```
 
-After updating, copy the revised CSS into Stylus and the revised JavaScript into Tampermonkey.
+### Building
 
-**Important:** Updating the Git repository does not automatically update installed Stylus styles or Tampermonkey userscripts.
+Install Mozilla's `web-ext` utility using npm:
 
-Until Super Lemmy becomes a standalone extension, installation and updates are manual.
+```bash
+npm install -g web-ext
+```
+
+Validate the extension:
+
+```bash
+web-ext lint
+```
+
+Build the extension:
+
+```bash
+web-ext build
+```
+
+The resulting ZIP archive is saved to `web-ext-artifacts/`.
+
+Regular Firefox installations require Mozilla-signed extensions for permanent installation. Unlisted signing is available through the Mozilla Add-ons Developer Hub.
 
 ## Compatibility
 
@@ -188,7 +262,14 @@ Super Lemmy is currently developed and tested primarily with:
 - The standard Lemmy web interface (`lemmy-ui`)
 - `lemmy.world`
 
-The URL matching rules also include `lemmy.ca`, `feddit.org`, and other instances using domains beginning with `lemmy.`.
+The Firefox extension currently matches:
+
+- `lemmy.world`
+- `lemmy.ca`
+- `lemmy.ml`
+- `feddit.org`
+
+The manual Stylus and Tampermonkey installation supports additional instances through configurable URL-matching expressions.
 
 Compatibility across these instances has not been comprehensively tested. Different Lemmy versions may produce different results.
 
@@ -204,21 +285,26 @@ Super Lemmy is experimental, and some functionality remains a work in progress.
 - Some layouts and media types may behave differently across instances.
 - Direct video expansion supports common video file URLs but does not provide universal video embedding.
 - Browser and frontend compatibility testing is limited.
-- Installation and updates currently require managing separate Stylus styles and Tampermonkey scripts.
+- The Firefox extension does not yet provide configurable options.
+- Automatic signing and release publishing through GitHub Actions are not yet configured.
+- The manual Stylus/Tampermonkey installation requires separate updates.
 
 ## Roadmap
 
 Potential future improvements include:
 
+- [x] Package Super Lemmy as a standalone Firefox extension
+- [x] Bundle Markdown rendering dependencies locally
+- [x] Obtain Mozilla signing for permanent Firefox installation
+- [x] Configure a self-hosted Firefox update URL
+- [ ] Automate extension signing and publishing through GitHub Actions
 - [ ] Audit and refactor existing JavaScript and CSS while preserving working behavior
-- [ ] Consolidate the project into a standalone Firefox extension
 - [ ] Add a graphical settings interface for individual features
 - [ ] Make image-size limits and other interface preferences configurable
 - [ ] Improve infinite-scroll navigation and history restoration
 - [ ] Improve compatibility across Lemmy instances
 - [ ] Refine responsive layouts
 - [ ] Reduce duplicated code and improve performance
-- [ ] Simplify installation and automatic updates
 
 ## Feedback and contributions
 
@@ -240,11 +326,13 @@ Please keep contributions compatible with the project's existing functionality u
 
 ## Project status
 
-**Early development / experimental**
+**Early development / experimental — Firefox extension v0.1.0**
 
-The immediate focus is improving and maintaining the existing Stylus and Tampermonkey implementation.
+Super Lemmy is now available as a standalone, Mozilla-signed Firefox extension.
 
-A standalone Firefox extension with configurable settings is a longer-term goal.
+The original Stylus and Tampermonkey scripts remain available for manual installation.
+
+The immediate priorities are improving the existing functionality, configuring automated releases, and preparing a future extension version with customizable settings.
 
 ## License
 
