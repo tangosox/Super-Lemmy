@@ -594,11 +594,29 @@
             });
         });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
+        function startObserver() {
+            if (!document.body) return;
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            // Catch elements created before observation started.
+            initialize();
+            setup();
+        }
+
+        if (document.body) {
+            startObserver();
+        } else {
+            document.addEventListener(
+                'DOMContentLoaded',
+                startObserver,
+                { once: true }
+            );
+        }
+    } // End observeExpandedImages()
 
     observeExpandedImages();
     setup();

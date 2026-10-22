@@ -11,6 +11,12 @@
 (function () {
     'use strict';
 
+    console.log(
+        '[Super Lemmy] Script initialized:',
+        performance.now().toFixed(1),
+        'ms'
+    );
+
     const THREAD_HUES = [
         210, // blue
         165, // teal
@@ -411,10 +417,14 @@
     /*
      * Initial page.
      */
+    console.time('[Super Lemmy] Initial processing');
+
     processComments();
     processPostMetadata();
     moveCommentScores();
     scanResizableImages();
+
+    console.timeEnd('[Super Lemmy] Initial processing');
 
     /*
      * Lemmy dynamically inserts/re-renders comments, so process
@@ -492,11 +502,28 @@
         }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    function startObserver() {
+        if (!document.body) return;
 
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Process elements that appeared before observation began.
+        processComments();
+        processPostMetadata();
+        moveCommentScores();
+        scanResizableImages();
+    }
+
+    if (document.body) {
+        startObserver();
+    } else {
+        document.addEventListener('DOMContentLoaded', startObserver, {
+            once: true
+        });
+    }
     /*
     * ============================================================
     * Super Lemmy — Open links in new tabs

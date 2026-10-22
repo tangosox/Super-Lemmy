@@ -2,7 +2,7 @@
 {
   "manifest_version": 3,
   "name": "Super Lemmy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Classic Reddit-inspired interface for Lemmy",
   "browser_specific_settings": {
   "gecko": {
@@ -13,24 +13,34 @@
     }
   }
 },
+
 "content_scripts": [
-    {
-      "matches": [
-        "https://lemmy.world/*",
-        "https://lemmy.ca/*",
-        "https://lemmy.ml/*",
-        "https://feddit.org/*"
-      ],
-      "css": [
-        "src/frontpage.css",
-        "src/comments.css"
-      ],
-      "js": [
-        "vendor/markdown-it.min.js",
-        "src/comments.user.js",
-        "src/infinite-scroll.user.js"
-      ],
-      "run_at": "document_idle"
-    }
-  ]
+  {
+    "matches": [
+      "https://lemmy.world/*",
+      "https://lemmy.ca/*",
+      "https://lemmy.ml/*",
+      "https://feddit.org/*"
+    ],
+    "css": [
+      "src/frontpage.css",
+      "src/comments.css"
+    ],
+    "run_at": "document_start"
+  },
+  {
+    "matches": [
+      "https://lemmy.world/*",
+      "https://lemmy.ca/*",
+      "https://lemmy.ml/*",
+      "https://feddit.org/*"
+    ],
+    "js": [
+      "vendor/markdown-it.min.js",
+      "src/comments.user.js",
+      "src/infinite-scroll.user.js"
+    ],
+    "run_at": "document_start"
+  }
+]
 }
