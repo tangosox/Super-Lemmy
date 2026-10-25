@@ -82,8 +82,9 @@
                 upButton.after(upDisplay);
             }
 
+        if (upDisplay.textContent !== upCount) {
             upDisplay.textContent = upCount;
-
+        }
             /*
          * Create/update downvote count.
          */
@@ -98,8 +99,9 @@
                 downButton.after(downDisplay);
             }
 
+        if (downDisplay.textContent !== downCount) {
             downDisplay.textContent = downCount;
-
+        }
             /*
          * Mark every ORIGINAL header vote display.
          *
@@ -431,8 +433,26 @@
      * new DOM content as it appears.
      */
     let scheduled = false;
+    let mutationCount = 0;
+    //let processingCount = 0;
+
+    // check mutation debug
+    /*
+    setInterval(() => {
+        console.log(
+            '[Super Lemmy] Mutations per second:',
+            mutationCount
+        );
+        mutationCount = 0;
+        console.log(
+            '[Super Lemmy] Processing passes/sec:',
+            processingCount
+        );
+        processingCount = 0;
+    }, 1000); */
 
     const observer = new MutationObserver(() => {
+        //mutationCount++;
         if (scheduled) {
             return;
         }
@@ -440,6 +460,7 @@
         scheduled = true;
 
         requestAnimationFrame(() => {
+            //processingCount++;
             processComments();
             processPostMetadata();
             moveCommentScores();
@@ -516,7 +537,6 @@
         moveCommentScores();
         scanResizableImages();
     }
-
     if (document.body) {
         startObserver();
     } else {

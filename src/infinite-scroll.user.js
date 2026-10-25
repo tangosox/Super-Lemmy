@@ -760,7 +760,9 @@
 
         const vote = view.my_vote ?? 0;
 
-        score.textContent = view.counts.score;
+        if (score.textContent !== String(view.counts.score)) {
+            score.textContent = view.counts.score;
+        }
 
         up.setAttribute('aria-pressed', String(vote === 1));
         down.setAttribute('aria-pressed', String(vote === -1));

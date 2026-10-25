@@ -619,8 +619,13 @@ article.comment-node
 }
 
 /* Highlight votes submitted through Super Lemmy */
-.vote-bar button.super-lemmy-voted {
-    color: var(--bs-primary) !important;
+/* Match Lemmy's native vote colors on imported posts */
+.vote-bar button[aria-label="Upvote"].super-lemmy-voted {
+    color: var(--bs-info) !important;
+}
+
+.vote-bar button[aria-label="Downvote"].super-lemmy-voted {
+    color: var(--bs-danger) !important;
 }
 
 /* Shift the entire desktop text content to make room for + */
