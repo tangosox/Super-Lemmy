@@ -122,14 +122,20 @@ li.comment > ul.comments {
 
 /* Comment background */
 article.comment-node[style*="--thread-hue"] {
-    background:
-        hsl(var(--thread-hue) 20% 12%) !important;
+    background: hsl(
+        var(--thread-hue)
+        var(--sl-thread-saturation)
+        var(--sl-thread-lightness)
+    ) !important;
 }
 
 /* Corresponding nesting line */
 ul.comments[style*="--thread-hue"] {
-    border-left:
-        2px solid hsl(var(--thread-hue) 38% 38%) !important;
+    border-left: 2px solid hsl(
+        var(--thread-hue)
+        var(--sl-thread-line-saturation)
+        var(--sl-thread-line-lightness)
+    ) !important;
 }
 
 /* ============================================================

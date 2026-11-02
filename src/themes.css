@@ -1,0 +1,204 @@
+/* ============================================================
+   SUPER LEMMY — THEME PALETTES
+   ============================================================ */
+
+/* Original Dark: base values and fallback for Stylus/Tampermonkey. */
+:root {
+    --sl-navbar-bg: #1c2021;
+    --sl-navbar-border: #087f5b66;
+
+    --sl-feed-bg: #151819;
+    --sl-post-hover: #1b1f20;
+
+    --sl-button-bg: #202426;
+    --sl-button-border: #3b4143;
+    --sl-button-active: #343a3c;
+
+    --sl-meta-text: #858b8d;
+    --sl-meta-link: #6593a6;
+    --sl-spotlight-bg: #252900;
+
+    --sl-text: #e4e7e8;
+    --sl-muted: #929a9d;
+    --sl-page-bg: #151819;
+    --sl-sidebar-bg: #1c2021;
+    --sl-border: #3b4143;
+
+    --sl-thread-saturation: 20%;
+    --sl-thread-lightness: 12%;
+    --sl-thread-line-saturation: 38%;
+    --sl-thread-line-lightness: 38%;
+}
+
+/* Follow colors from the active Lemmy theme. */
+:root[data-sl-theme="lemmy"] {
+    --sl-navbar-bg: var(--bs-body-bg);
+    --sl-navbar-border: var(--bs-border-color);
+
+    --sl-feed-bg: var(--bs-body-bg);
+    --sl-post-hover: var(--bs-tertiary-bg, var(--bs-secondary-bg));
+
+    --sl-button-bg: var(--bs-secondary-bg);
+    --sl-button-border: var(--bs-border-color);
+    --sl-button-active: var(--bs-tertiary-bg, var(--bs-secondary-bg));
+
+    --sl-meta-text: var(--bs-secondary-color, var(--bs-body-color));
+    --sl-meta-link: var(--bs-link-color);
+    --sl-spotlight-bg: var(--bs-secondary-bg);
+}
+
+/* Super Lemmy Light: explicit palette. */
+:root[data-sl-theme="light"] {
+    --sl-navbar-bg: #f3f4f6;
+    --sl-navbar-border: #cbd5e1;
+
+    --sl-feed-bg: #ffffff;
+    --sl-post-hover: #f1f5f9;
+
+    --sl-button-bg: #e5e7eb;
+    --sl-button-border: #cbd5e1;
+    --sl-button-active: #cbd5e1;
+
+    --sl-meta-text: #64748b;
+    --sl-meta-link: #2563eb;
+    --sl-spotlight-bg: #f1f5f9;
+
+    --sl-text: #25313c;
+    --sl-muted: #64748b;
+    --sl-page-bg: #ffffff;
+    --sl-sidebar-bg: #f8f9fa;
+    --sl-border: #d1d5db;
+
+    --sl-thread-saturation: 55%;
+    --sl-thread-lightness: 93%;
+    --sl-thread-line-saturation: 30%;
+    --sl-thread-line-lightness: 65%;
+}
+
+/* ============================================================
+   FOLLOW LEMMY — THEME-DEPENDENT COMMENT DEPTH COLORS
+   ============================================================ */
+
+:root[data-sl-theme="lemmy"] article.comment-node[style*="--thread-hue"] {
+    background: color-mix(
+        in srgb,
+        var(--bs-body-bg) 90%,
+        hsl(var(--thread-hue) 100% 50%) 10%
+    ) !important;
+}
+
+/* Preserve border-free indentation in Follow Lemmy mode. */
+:root[data-sl-theme="lemmy"] ul.comments[style*="--thread-hue"] {
+    border-left: 0 !important;
+}
+
+/* ============================================================
+   SUPER LEMMY LIGHT — PAGE, NAVBAR AND CARDS
+   ============================================================ */
+
+:root[data-sl-theme="light"] body,
+:root[data-sl-theme="light"] .lemmy-site,
+:root[data-sl-theme="light"] main {
+    background-color: var(--sl-page-bg) !important;
+    color: var(--sl-text) !important;
+}
+
+:root[data-sl-theme="light"] .shadow-sm:has(#navbar) {
+    background-color: var(--sl-navbar-bg) !important;
+    border-bottom: 1px solid var(--sl-navbar-border) !important;
+}
+
+:root[data-sl-theme="light"] #navbar,
+:root[data-sl-theme="light"] #navbar .navbar-brand,
+:root[data-sl-theme="light"] #navbar .nav-link,
+:root[data-sl-theme="light"] #navbar .btn {
+    color: var(--sl-text) !important;
+}
+
+:root[data-sl-theme="light"] #navbar .nav-link:hover {
+    color: var(--sl-meta-link) !important;
+}
+
+:root[data-sl-theme="light"] .card {
+    background-color: var(--sl-sidebar-bg) !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] .card-body,
+:root[data-sl-theme="light"] .card-header {
+    color: var(--sl-text) !important;
+}
+
+/* ============================================================
+   SUPER LEMMY LIGHT — POSTS, COMMENTS AND LINKS
+   ============================================================ */
+
+:root[data-sl-theme="light"] article.comment-node,
+:root[data-sl-theme="light"] article.comment-node .comment-content,
+:root[data-sl-theme="light"] article.comment-node .md-div,
+:root[data-sl-theme="light"] article.comment-node .text-body,
+:root[data-sl-theme="light"] .post-title .link-dark,
+:root[data-sl-theme="light"] .post-title .link-dark *,
+:root[data-sl-theme="light"] .post-title h1 a,
+:root[data-sl-theme="light"] .post-listing a.text-body,
+:root[data-sl-theme="light"] .post-listing .card-title a,
+:root[data-sl-theme="light"] .card-title,
+:root[data-sl-theme="light"] .card-title a.text-body {
+    color: var(--sl-text) !important;
+}
+
+:root[data-sl-theme="light"] article.comment-node .text-muted,
+:root[data-sl-theme="light"] article.comment-node .text-secondary,
+:root[data-sl-theme="light"] .post-listing .text-muted,
+:root[data-sl-theme="light"] .post-listing .d-flex.align-items-center.text-muted,
+:root[data-sl-theme="light"] .card .text-muted,
+:root[data-sl-theme="light"] .post-listing a.fst-italic.link-dark {
+    color: var(--sl-muted) !important;
+}
+
+/* White comment separators over the pastel nesting backgrounds. */
+:root[data-sl-theme="light"] article.comment-node.border-top {
+    border-top-color: #ffffff !important;
+}
+
+/* ============================================================
+   SUPER LEMMY LIGHT — EDITOR, INPUTS AND DROPDOWNS
+   ============================================================ */
+
+:root[data-sl-theme="light"] .rounded.bg-light.border,
+:root[data-sl-theme="light"] .rounded.bg-light.border .d-flex.flex-wrap.border-bottom {
+    background-color: var(--sl-sidebar-bg) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] .rounded.bg-light.border .d-flex.flex-wrap.border-bottom button.text-muted,
+:root[data-sl-theme="light"] .rounded.bg-light.border .d-flex.flex-wrap.border-bottom a.text-muted {
+    color: var(--sl-muted) !important;
+}
+
+:root[data-sl-theme="light"] textarea.form-control,
+:root[data-sl-theme="light"] input.form-control {
+    background-color: #ffffff !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] textarea.form-control::placeholder,
+:root[data-sl-theme="light"] input.form-control::placeholder {
+    color: var(--sl-muted) !important;
+}
+
+/* Style the closed select and its native option list as light. */
+:root[data-sl-theme="light"] select.form-select {
+    color-scheme: light !important;
+    background-color: #ffffff !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] select.form-select option {
+    color-scheme: light !important;
+    background-color: #ffffff !important;
+    color: var(--sl-text) !important;
+}

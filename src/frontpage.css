@@ -35,8 +35,8 @@ padding-right: 8px !important;
 }
 
 .shadow-sm:has(#navbar) {
-    background: #1c2021 !important;
-    border-bottom: 1px solid #087f5b66 !important;
+    background: var(--sl-navbar-bg) !important;
+    border-bottom: 1px solid var(--sl-navbar-border) !important;
     box-shadow: none !important;
 }
 
@@ -114,7 +114,7 @@ padding-bottom: 6px !important;
 
     min-height: 0 !important;
 
-    background: #252900 !important;
+    background: var(--sl-spotlight-bg) !important;
     border: 0 !important;
 
     font-size: 0.78rem !important;
@@ -162,9 +162,8 @@ padding-bottom: 6px !important;
     padding: 3px 9px !important;
     min-height: 0 !important;
 
-    background: #202426 !important;
-    border: 1px solid #3b4143 !important;
-
+    background: var(--sl-button-bg) !important;
+    border: 1px solid var(--sl-button-border) !important;
     font-size: 14px !important;
     font-weight: 600 !important;
     line-height: 1.25 !important;
@@ -173,8 +172,7 @@ padding-bottom: 6px !important;
 .home .btn-group .btn.active,
 .home .btn-group .btn:checked,
 .home .btn-group .btn-check:checked + .btn {
-    background: #343a3c !important;
-}
+    background: var(--sl-button-active) !important;}
 
 /* Sort selector */
 .home .form-select {
@@ -199,8 +197,7 @@ padding-bottom: 6px !important;
     /* Pull list toward the old-Lemmy left edge */
     margin-left: -8px !important;
 
-    background: #151819 !important;
-}
+    background: var(--sl-feed-bg) !important;}
 
 .post-listing {
     margin: 0 !important;
@@ -212,8 +209,7 @@ padding-bottom: 6px !important;
 }
 
 .post-listing:hover {
-    background: #1b1f20 !important;
-}
+    background: var(--sl-post-hover) !important;}
 
 /* Very subtle separators */
 .post-listings > hr {
@@ -388,8 +384,7 @@ padding-bottom: 6px !important;
     margin: 1px 0 2px !important;
     padding: 0 !important;
 
-    color: #858b8d !important;
-
+    color: var(--sl-meta-text) !important;
     font-size: 12px !important;
     line-height: 1.25 !important;
 }
@@ -401,8 +396,7 @@ padding-bottom: 6px !important;
 
 .old-lemmy-meta .person-listing,
 .old-lemmy-meta .community-link {
-    color: #6593a6 !important;
-}
+    color: var(--sl-meta-link) !important;}
 
 .old-lemmy-meta picture,
 .old-lemmy-meta img,
