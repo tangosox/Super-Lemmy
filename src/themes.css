@@ -119,6 +119,23 @@
     color: var(--sl-meta-link) !important;
 }
 
+/* Account dropdown menu */
+:root[data-sl-theme="light"] #navbar .dropdown-menu {
+    background-color: var(--sl-sidebar-bg) !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] #navbar .dropdown-item {
+    color: var(--sl-text) !important;
+}
+
+:root[data-sl-theme="light"] #navbar .dropdown-item:hover,
+:root[data-sl-theme="light"] #navbar .dropdown-item:focus {
+    background-color: var(--sl-post-hover) !important;
+    color: var(--sl-text) !important;
+}
+
 :root[data-sl-theme="light"] .card {
     background-color: var(--sl-sidebar-bg) !important;
     color: var(--sl-text) !important;
@@ -128,6 +145,41 @@
 :root[data-sl-theme="light"] .card-body,
 :root[data-sl-theme="light"] .card-header {
     color: var(--sl-text) !important;
+}
+
+/* Settings page navigation tabs */
+:root[data-sl-theme="light"] .nav-tabs {
+    border-bottom-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] .nav-tabs .nav-link {
+    color: var(--sl-text) !important;
+}
+
+:root[data-sl-theme="light"] .nav-tabs .nav-link.active {
+    background-color: var(--sl-sidebar-bg) !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) var(--sl-border)
+                  var(--sl-sidebar-bg) !important;
+}
+
+/* Native secondary buttons */
+:root[data-sl-theme="light"] .btn-secondary {
+    background-color: #e5e7eb !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"] .btn-secondary:hover {
+    background-color: #d1d5db !important;
+    color: var(--sl-text) !important;
+}
+
+/* Warning messages */
+:root[data-sl-theme="light"] .alert-warning {
+    background-color: #fff3cd !important;
+    color: #664d03 !important;
+    border-color: #ffecb5 !important;
 }
 
 /* ============================================================
@@ -201,4 +253,35 @@
     color-scheme: light !important;
     background-color: #ffffff !important;
     color: var(--sl-text) !important;
+}
+
+/* Checkbox and radio controls */
+:root[data-sl-theme="light"] .form-check-input {
+    background-color: #ffffff !important;
+    border-color: var(--sl-border) !important;
+    color-scheme: light;
+}
+
+:root[data-sl-theme="light"] .form-check-input:checked {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Native text input labels and secondary help text */
+:root[data-sl-theme="light"] .form-label,
+:root[data-sl-theme="light"] .form-text {
+    color: var(--sl-text) !important;
+}
+
+/* File upload Browse buttons */
+:root[data-sl-theme="light"]
+input[type="file"].form-control::file-selector-button {
+    background-color: #e5e7eb !important;
+    color: var(--sl-text) !important;
+    border-color: var(--sl-border) !important;
+}
+
+:root[data-sl-theme="light"]
+input[type="file"].form-control::file-selector-button:hover {
+    background-color: #d1d5db !important;
 }
